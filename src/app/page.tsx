@@ -1,11 +1,9 @@
-import Image from "next/image";
+import Main from "@/components/Main";
+import Section from "@/components/Section";
 
 export default function Home() {
-  return(
-    <div>
-      <h1>
-        Bloom-Tech
-      </h1>
-    </div>
-  )
+  return <div>
+    <Main/>
+    <Section/>
+  </div>;
 }

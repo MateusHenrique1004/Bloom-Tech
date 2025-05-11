@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import Footer from "@/components/Footer";
+import { ThemeProvider } from "@/components/Theme/theme-provider";
 config.autoAddCss = false
 
 const geistSans = Geist({
@@ -28,8 +29,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
+      <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          > 
         <Header/>
         
         <main className="flex-grow">
@@ -37,6 +44,7 @@ export default function RootLayout({
         </main>
         
         <Footer/>
+        </ThemeProvider>
       </body>
     </html>
   ) 

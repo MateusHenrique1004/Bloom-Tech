@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { GridContainer } from "../gridContainer";
 import Link from "next/link";
+import { Toggle } from "../Theme/toggle";
 export function Header() {
   return (
     <header className="bg-black sticky top-0 w-full  h-[80px] z-50 flex  items-center">
@@ -50,6 +51,7 @@ export function Header() {
           >
             Login
           </Link>
+          <Toggle/>
         </nav>
       </GridContainer>
     </header>

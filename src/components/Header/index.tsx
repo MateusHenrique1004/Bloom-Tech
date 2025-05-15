@@ -32,7 +32,7 @@ export function Header() {
             className="bg-transparent ml-2 border-none text-white overflow-ellipsis whitespace-nowrap outline-none overflow-hidden"
           />
         </div> */}
-        <nav className="text-[#5AAC38] flex items-center p-2 space-x-3 dark:text-white  ">
+        <nav className="text-[#5AAC38] font-bold flex items-center p-2 space-x-3 dark:text-white  ">
           <Link className="" href={"/"}>
             Home
           </Link>

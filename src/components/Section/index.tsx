@@ -42,7 +42,7 @@ export default function Section() {
       </section>
 
       <FadeInText direction="left">
-        <section className="w-[1340px]  flex flex-col ml-44  justify-center items-center  ">
+        <section className="w-[1340px] flex flex-col ml-44  justify-center items-center  ">
           <div className="w-full grid grid-cols-2 gap-16 place-self-auto ">
             <div className="flex flex-col justify-center items-center ">
               <div className="flex flex-col space-y-3">

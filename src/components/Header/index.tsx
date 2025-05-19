@@ -36,8 +36,15 @@ export function Header() {
           <Link className="" href={"/"}>
             Home
           </Link>
-          <div className="">Plantas</div>
-          <div className="">Sobre Nós</div>
+              <Link className="" href={"/"}>
+            Plantas
+          </Link>
+              <Link className="" href={"/"}>
+            Blog
+          </Link>
+             <Link className="" href={"/"}>
+            Sobre Nós
+          </Link>
         </nav>
 
         <nav className="text-blue-50 flex items-center mr-4 space-x-3">

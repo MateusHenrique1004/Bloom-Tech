@@ -26,9 +26,9 @@ export default function Main(){
    />
   </div>
 
-  <section className="">
-    
-  </section>
+<section>
+
+</section>
 
 </div>
 

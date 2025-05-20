@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Register() {
@@ -86,16 +85,19 @@ export default function Register() {
               <button className=" w-full bg-[#3c7225] hover:bg-[#5AAC38] text-white font-bold py-2 px-4 rounded-full">
                 Cadastrar
               </button>
-              
-      <div className="flex flex-col justify-center items-center mt-5 space-y-5">
-          <hr className="border-t border-green-800 border-1 w-full mx-auto" />
-          
-           <Link className="block text-lg font-bold text-white dark:text-white" href={'/login'}>Já tem Conta? Login</Link>
 
-        </div>
+              <div className="flex flex-col justify-center items-center mt-5 space-y-5">
+                <hr className="border-t border-green-800 border-1 w-full mx-auto" />
+
+                <Link
+                  className="block text-lg font-bold text-white dark:text-white"
+                  href={"/login"}
+                >
+                  Já tem Conta? Login
+                </Link>
+              </div>
             </div>
           </div>
-
         </div>
       </main>
     </>

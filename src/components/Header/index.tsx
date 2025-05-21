@@ -36,13 +36,13 @@ export function Header() {
           <Link className="" href={"/"}>
             Home
           </Link>
-              <Link className="" href={"/"}>
+          <Link className="" href={"/"}>
             Plantas
           </Link>
-              <Link className="" href={"/"}>
+          <Link className="" href={"/"}>
             Blog
           </Link>
-             <Link className="" href={"/"}>
+          <Link className="" href={"/us"}>
             Sobre Nós
           </Link>
         </nav>

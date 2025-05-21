@@ -17,6 +17,7 @@ export default function Us() {
   return (
     <>
       <Zoom />
+      <Section />
     </>
   );
 }

@@ -3,9 +3,10 @@ import LoginForm from "@/components/Login";
 export default function Login() {
   return (
     <>
-      <main className=" grid grid-cols-2 h-svh">
-        <LoginForm/>
-      </main>
+      {" "}
+      <div className="grid grid-cols-2 h-screen">
+        <LoginForm />
+      </div>
     </>
   );
 }

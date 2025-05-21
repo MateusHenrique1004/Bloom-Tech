@@ -1,90 +1,154 @@
 "use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+import { loginSchema, LoginFormValues } from "../../schemas/loginSchema";
 import Link from "next/link";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
-  async function login(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-    const data = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-    };
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-    signIn("credentials", {
-      ...data,
-      callbackUrl: "/dashbord",
+  async function onSubmit(values: LoginFormValues) {
+    setIsLoading(true);
+    const res = await signIn("credentials", {
+      ...values,
+      redirect: false,
     });
+
+    if (res?.ok) {
+      router.push("/dashbord");
+    } else {
+      alert("Credenciais inválidas");
+    }
+    setIsLoading(false);
   }
 
   return (
     <>
-      <form onSubmit={login}>
-        <div className="flex flex-col">
-          <div className="w-[405px] h-[584px] mt-[220px] ml-[175px] justify-center items-center ">
-            <div className=" font-bold space-y-5">
-              <h1 className="text-4xl">Bem-Vindo de Volta!</h1>
-              <p className="text-2xl">Entre com suas Credenciais</p>
-            </div>
-
-            <div className="  justify items-center mt-10 space-y-5">
-              <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Email
-              </p>
-              <input
-                name="email"
-                type="email"
-                id="email"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="monica@gmai.com"
-                required
-              />
-
-              <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Senha
-              </p>
-
-              <input
-                name="password"
-                type="password"
-                id="password"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-
-              <div className="flex justify-between items-center">
-                <Link
-                  className="block mb-2 text-sm font-medium text-blue-700 dark:text-white"
-                  href={"/forgot"}
-                >
-                  {" "}
-                  Esqueceu a senha?{" "}
-                </Link>
-              </div>
-              <button
-                className=" w-full bg-[#3c7225] hover:bg-[#5AAC38] text-white font-bold py-2 px-4 rounded-full"
-                type="submit"
-              >
-                Login
-              </button>
-            </div>
-            <div className="flex flex-col justify-center items-center mt-12 space-y-5">
-              <hr className="border-t border-green-800 border-1 w-full mx-auto" />
-
-              <Link
-                className="block text-sm font-medium text-[#5AAC38] dark:text-white"
-                href={"/register"}
-              >
-                {" "}
-                Ainda não tem Cadastro? Cadastrar
-              </Link>
-            </div>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col justify-center items-center px-8 space-y-6"
+        >
+          <div className="space-y-2 text-center">
+            <h1 className="text-4xl font-bold">Bem-vindo de volta!</h1>
+            <p className="text-xl">Entre com suas credenciais</p>
           </div>
-        </div>
-      </form>
-      <div className="w-full h-[900px] ">
+
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="seu@email.com"
+                    type="email"
+                    {...field}
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Senha</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      placeholder="••••••••"
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                      disabled={isLoading}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                      disabled={isLoading}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="w-full text-right">
+            <Link
+              href="/forgot"
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Esqueceu a senha?
+            </Link>
+          </div>
+
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Entrando...
+              </>
+            ) : (
+              "Login"
+            )}
+          </Button>
+
+          <div className="mt-4 text-center">
+            <span className="text-sm">Ainda não tem cadastro? </span>
+            <Link
+              href="/register"
+              className="text-sm text-green-600 hover:underline"
+            >
+              Cadastrar
+            </Link>
+          </div>
+        </form>
+      </Form>
+
+      <div className="w-full h-[900px]">
         <Image
           className="object-cover w-full h-full rounded-2xl"
           src="/fundo2.jpg"

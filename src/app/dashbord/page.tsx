@@ -10,12 +10,23 @@ export default async function Dashbord() {
   }
   return (
     <>
-      <div className="flex flex-row-reverse">
-        <div className="bg-yellow-300">eu, {session?.user?.name} </div>
-        <div className="bg-amber-800">vou</div>
-        <div className="bg-blue-950">dormir</div>
+    <Logout />
+      <div className=" flex flex-col m-20 bg-black">
+        <div className=" flex flex-row">
+
+            <div className="">
+
+            </div>
+
+            <div className="flex flex-col">
+              
+            </div>
+
+
+         </div>         
+   
       </div>
-              <Logout />
+             
 
     </>
   );

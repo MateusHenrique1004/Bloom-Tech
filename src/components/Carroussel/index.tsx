@@ -3,6 +3,7 @@ import React from "react"
 import { useKeenSlider } from "keen-slider/react"
 import "keen-slider/keen-slider.min.css"
 import "./styles.css"
+import Image from "next/image"
 
 const animation = { duration: 16000, easing: (t) => t }
 export default function Carroussel ()  {
@@ -24,7 +25,7 @@ export default function Carroussel ()  {
 
   return (
     <div ref={sliderRef} className="keen-slider">
-      <div className="keen-slider__slide number-slide1">1</div>
+      <div className="keen-slider__slide number-slide1"><Image src={"/fundo1.jpg"} alt="1" width={500} height={100} /></div>
       <div className="keen-slider__slide number-slide2">2</div>
       <div className="keen-slider__slide number-slide3">3</div>
       <div className="keen-slider__slide number-slide4">4</div>

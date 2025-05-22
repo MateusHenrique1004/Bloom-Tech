@@ -1,9 +1,10 @@
-import Link from "next/link";
+import RegisterForm from "@/components/Register";
 
 export default function Register() {
   return (
     <>
-      <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply h-svh ">
+    <RegisterForm />
+      {/* <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply h-svh ">
         <div className="flex flex-col">
           <div className="w-[405px] h-[584px] mt-[100px] ml-[175px] justify-center items-center">
             <div className=" font-bold space-y-5 text-white">
@@ -99,7 +100,7 @@ export default function Register() {
             </div>
           </div>
         </div>
-      </main>
+      </main> */}
     </>
   );
 }

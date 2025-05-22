@@ -3,8 +3,10 @@ import { signOut } from "next-auth/react";
 
 export default function Logout() {
   return (
-    <button className="w-full p-4 bg-green-500" onClick={() => signOut()}>
+    <div className="flex flex-row-reverse">
+    <button className="w-20 p-2 bg-green-500 cursor-pointer rounded-full" onClick={() => signOut()}>
       SAIR
     </button>
+    </div>
   );
 }

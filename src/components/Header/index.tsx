@@ -39,7 +39,7 @@ export function Header() {
           <Link className="" href={"/"}>
             Plantas
           </Link>
-          <Link className="" href={"/"}>
+          <Link className="" href={"/blog"}>
             Blog
           </Link>
           <Link className="" href={"/us"}>

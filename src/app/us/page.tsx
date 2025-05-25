@@ -47,28 +47,30 @@ export default function Us() {
     <main ref={container} className={styles.main}>
       <div className="flex  justify-between items-center w-full w-max-[1100] py-16 px-[120px]">
         <div className=" flex flex-col box-border max-w-[400px] space-y-4 ">
-          <h4 className="font-bold text-3xl text-green-600">Sobre Nós</h4>
-          <h1 className="font-extrabold text-5xl text-black">
+          <h4 className="font-bold text-3xl text-[#5AAC38]">Sobre Nós</h4>
+          <h1 className="font-extrabold text-5xl text-black dark:text-white">
             Modernidade e Sustentabilidade em Vasos
           </h1>
 
-          <p className="text-lg">
-            Somos a BloomTech, uma staturp que brasileira fundada por 3
-            estudantes de ADS. Nosso objetivo é trazer novidade em seu
-            plantio...
+          <p className="text-lg font-medium ">
+            Somos a BloomTech, uma staturp brasileira fundada por 3 estudantes
+            de ADS. Nosso objetivo é trazer novidade em seu plantio...
           </p>
         </div>
 
         <Image
-          src={"/people/us.png"}
-          alt=""
+          src={"/people/us.jpg"}
+          alt="Peoples"
           width={692}
           height={500}
-          className=" w-[692px] h-[500px]"
+          className=" object-contain"
         />
       </div>
       <div className=" flex flex-col justify-center items-center space-y-4 text-center py-20">
-        <h1 className="text-5xl "> Números que contam nossa história </h1>
+        <h1 className="text-5xl font-black ">
+          {" "}
+          Números que contam nossa história{" "}
+        </h1>
         <div className="flex justify-between">
           <Numbers
             title="2024"
@@ -117,12 +119,12 @@ export default function Us() {
             src={"/people/pessoa_pc.png"}
             alt=""
             width={692}
+            quality={100}
             height={500}
-            className=" w-[692px] h-[500px]"
+            className=" object-contain "
           />
-          <div className=" flex flex-col box-border max-w-[400px] space-y-4 text-center ">
-            <h1 className="text-5xl font-extrabold ">
-              {" "}
+          <div className=" flex flex-col box-border max-w-[600px] space-y-4 text-center ">
+            <h1 className="text-5xl font-extrabold break-words ">
               Testar, Errar, Tentar e Acertar
             </h1>
             <p className="text-lg text-justify">

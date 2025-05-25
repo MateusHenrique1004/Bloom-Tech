@@ -17,9 +17,11 @@ export default function Blog() {
   }, []);
   return (
     <>
-      <h1 className="text-center text-4xl text-green-800 font-extrabold">
-      BloomTech Blog 
-      <p className="text-2xl font-bold   ">Florescendo Notícias</p>
+      <h1 className="text-center text-4xl text-[#5AAC38] font-extrabold ">
+        BloomTech Blog
+        <p className="text-2xl font-bold dark:text-white ">
+          Florescendo Notícias
+        </p>
       </h1>
       <Zoom />
       <BlogContent />

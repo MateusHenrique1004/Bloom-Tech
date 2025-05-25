@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+
 export default function CardAbout({
   i,
   name,

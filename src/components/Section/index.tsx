@@ -91,7 +91,7 @@ export default function Section() {
           </p>
           <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
             <Link
-              href="#"
+              href="/us"
               className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-[#5AAC38] hover:bg-[#3c7225] focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
             >
               Saber Mais

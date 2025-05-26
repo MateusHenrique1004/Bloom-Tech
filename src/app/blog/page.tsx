@@ -1,7 +1,6 @@
 "use client";
 import BlogContent from "@/components/BlogContent";
 import Zoom from "@/components/Parallax";
-import Section from "@/components/Section";
 import Lenis from "@studio-freight/lenis";
 import { useEffect } from "react";
 

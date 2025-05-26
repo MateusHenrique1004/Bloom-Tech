@@ -15,7 +15,7 @@ export default function CardNews({ title, text, src }: CardNewsProps) {
       <Image
         src={src}
         alt="card"
-        className="w-full h-[220px]  object-cover rounded-xs"
+        className="w-full h-[220px]  object-cover rounded-xs hover:scale-95"
       />
 
       <div className="p-2 flex flex-col justify-between h-[230px]">

@@ -3,7 +3,6 @@ import CardNews from "../Card/news";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
-import Accordion from "./accordion";
 import news1 from "../../../public/vase/news1.jpg";
 import news2 from "../../../public/vase/news2.jpg";
 import news3 from "../../../public/vase/news3.jpg";
@@ -89,15 +88,6 @@ export default function BlogContent() {
             title="Agricultura Urbana: Projeto Social Ensina a Construir Vasos Autoirrigáveis Caseiros"
             text="ONGs estão ensinando comunidades carentes a criar seus próprios vasos autoirrigáveis com materiais acessíveis, promovendo sustentabilidade e segurança alimentar."
           />
-        </div>
-
-        <div className="flex flex-col justify-center mt-20">
-          <h1 className="text-center text-5xl font-bold">
-            Há algum Topico que queira falar ?
-          </h1>
-          <Accordion title="Pesquisas">
-            <p>Voce pode contribuir com noticias e novas formas de auxilio.</p>
-          </Accordion>
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import {
   faBarcode,
   faSeedling,
+  faSquareArrowUpRight,
   faTachographDigital,
 } from "@fortawesome/free-solid-svg-icons";
 import Carroussel from "../Carroussel";
@@ -9,6 +10,8 @@ import Card from "../Card";
 import { FadeInText } from "../Fade/FadeInText";
 import CardTestimoninal from "../Card/testimonial";
 import Link from "next/link";
+import Accordion from "../BlogContent/accordion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Section() {
   return (
@@ -17,7 +20,7 @@ export default function Section() {
         <div className="text-center text-5xl font-bold text-[#5AAC38] mt-40 ">
           <h1>O Vaso de Plantas mais Prático que há </h1>
         </div>
-        <div className="w-[1400px] h-[500px] flex flex-row justify-center items-center space-x-10">
+        <div className="w-full max-w-[1400px] h-[500px] flex flex-row justify-center items-center space-x-10">
           <Card
             icon={faTachographDigital}
             title={"Mais Tecnologia"}
@@ -44,22 +47,24 @@ export default function Section() {
         </div>
       </section>
 
-      <section className="w-[1340px] h-[400px] flex flex-col ml-44  justify-center items-center">
+      <section className="w-full max-w-[1340px] mx-auto px-4 h-[400px] flex flex-col justify-center items-center">
         <Carroussel />
       </section>
 
       <FadeInText direction="left">
-        <section className="w-[1340px] flex flex-col ml-44 my-20 justify-center items-center  ">
+        <section className="w-full max-w-[1340px] mx-auto px-4 flex flex-col my-20 justify-center items-center  ">
           <div className="w-full grid grid-cols-2 gap-16 place-self-auto ">
             <div className="flex flex-col justify-center items-center ">
               <div className="flex flex-col space-y-3">
                 <h1 className="text-[#5AAC38] text-7xl font-bold dark:text-white">
                   Por que Confiar em Nós?
                 </h1>
-                <span className="text-lg">
+                <span className="text-lg text-justify">
                   {" "}
-                  Porque SOMOS OS MELHORES! Atuamos com praticidade,
-                  confiabilidade e amor!!!
+                  Porque somos uma empresa que sempre busca tratar nossos
+                  clientes com o melhor! Atuamos com praticidade,confiabilidade,
+                  amor e segurança! Todos nossos produtos atendem as demandas
+                  atuais do mercado com um toque único nosso: a Tecnologia.
                 </span>
               </div>
             </div>
@@ -92,9 +97,9 @@ export default function Section() {
           <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
             <Link
               href="/us"
-              className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-[#5AAC38] hover:bg-[#3c7225] focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+              className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-[#5AAC38] hover:bg-[#3c7225] focus:ring-4 focus:ring-emerald-800 dark:focus:ring-emerald-950"
             >
-              Saber Mais
+              Sobre Nós
               <svg
                 className="w-3.5 h-3.5 ms-2 rtl:rotate-180"
                 aria-hidden="true"
@@ -114,6 +119,47 @@ export default function Section() {
           </div>
         </div>
       </section>
+
+      <FadeInText direction="right">
+        <section className="w-full max-w-[1340px] mx-auto px-4 flex flex-col my-20 justify-center items-center   ">
+          <div className="w-full grid grid-cols-2 gap-16 place-self-auto ">
+            <div className="flex flex-col justify-center items-center">
+              <div className="w-full h-full">
+                <Image
+                  className=" w-full h-full object-center"
+                  src={"/blog.jpg"}
+                  width={800}
+                  height={200}
+                  alt="Confie em Nós"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col justify-center items-center ">
+              <div className="flex flex-col space-y-3">
+                <h1 className="text-[#5AAC38] text-7xl font-bold dark:text-white">
+                  BloomTech Blog
+                </h1>
+                <span className="text-lg">
+                  {" "}
+                  Fique por dentro das novidades da botanica e suas autonomias!
+                </span>
+                <Link
+                  href="/blog"
+                  className=" text-4xl  inline-flex items-center text-[#5AAC38] font-semibold hover:underline"
+                >
+                  Blog
+                  <span className="ml-2 p-1 rounded-full">
+                    <FontAwesomeIcon
+                      icon={faSquareArrowUpRight}
+                      className="text-[#5AAC38]"
+                    />
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </FadeInText>
 
       <section className="flex flex-col  justify-center items-center ">
         <div className=" flex flex-col mt-20 space-y-10">
@@ -144,7 +190,7 @@ export default function Section() {
             name="Cintia Oliveira"
             profession="Escritora"
             src="/people/rosto3.jpg"
-            title="O Item mais prático daBOTÂNICA "
+            title="O Item mais prático da BOTÂNICA "
             subtitle="Eu tinha difuldades com minhas plantas, agora o vaso da me auxilia. Grata!"
           />
 
@@ -155,6 +201,23 @@ export default function Section() {
             title="Já tenho 5 Vasos!!!"
             subtitle="E quero mais, com esses vasos, meu sonho de ter meu jardim é real e tudo no meu AP!!!"
           />
+        </div>
+        <div className=" flex flex-col justify-center mt-20">
+          <h1 className="text-center text-5xl font-bold">
+            Perguntas Frequentes - FAQ
+          </h1>
+          <Accordion title="Como Scanear meu Vaso?">
+            <p>Voce pode contribuir com noticias e novas formas de auxilio.</p>
+          </Accordion>
+          <Accordion title="Onde Trocar de Planta?">
+            <p>Voce pode contribuir com noticias e novas formas de auxilio.</p>
+          </Accordion>
+          <Accordion title="Meus Gráficos são únicos?">
+            <p>Voce pode contribuir com noticias e novas formas de auxilio.</p>
+          </Accordion>
+          <Accordion title="Como faço para Trocar meu vaso?">
+            <p>Voce pode contribuir com noticias e novas formas de auxilio.</p>
+          </Accordion>
         </div>
       </section>
     </>

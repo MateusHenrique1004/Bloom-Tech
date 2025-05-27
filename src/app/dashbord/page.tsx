@@ -15,6 +15,7 @@ export default async function Dashbord() {
   }
   return (
     <>
+      <h1>Hello {session.user?.name}</h1>
       <Logout />
       <div className=" flex flex-col m-20 ">
         <div className=" flex flex-row justify-center items-center space-x-20">

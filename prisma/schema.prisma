@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id       Int    @id @default(autoincrement())
+  nome     String
+  email    String @unique
+  telefone String
+  senha    String
+
+  vasos Vaso[]
+}
+
+model Planta {
+  id                  Int     @id @default(autoincrement())
+  nomePopular         String
+  nomeCientifico      String
+  idFamilia           Int
+  ambienteCultivo     String?
+  frequenciaIrrigacao String?
+  exposicaoSolar      String?
+  temperaturaIdeal    Float?
+  alturaMax           Float?
+  larguraMax          Float?
+  velocidadeAltura    Float?
+  velocidadeLargura   Float?
+
+  familia  FamiliaPlanta @relation(fields: [idFamilia], references: [id])
+  plantios Plantio[]
+}
+
+model FamiliaPlanta {
+  id   Int    @id @default(autoincrement())
+  nome String
+
+  plantas Planta[]
+}
+
+model TipoSensor {
+  id     Int    @id @default(autoincrement())
+  modelo String
+
+  sensores Sensor[]
+}
+
+model Sensor {
+  id            Int      @id @default(autoincrement())
+  idTipoSensor  Int
+  numeroSerie   BigInt
+  dataAquisicao DateTime
+
+  tipo         TipoSensor   @relation(fields: [idTipoSensor], references: [id])
+  sensoresVaso SensorVaso[]
+}
+
+model Vaso {
+  id              Int      @id @default(autoincrement())
+  idUser          Int
+  dataAquisicao   DateTime
+  dataAtualizacao DateTime
+
+  usuario  Usuario      @relation(fields: [idUser], references: [id])
+  plantios Plantio[]
+  placas   PlacaVaso[]
+  sensores SensorVaso[]
+}
+
+model Plantio {
+  id         Int       @id @default(autoincrement())
+  idPlanta   Int
+  idVaso     Int
+  dataInicio DateTime
+  dataFim    DateTime?
+
+  planta Planta @relation(fields: [idPlanta], references: [id])
+  vaso   Vaso   @relation(fields: [idVaso], references: [id])
+}
+
+model Placa {
+  id            Int      @id @default(autoincrement())
+  numeroSerie   BigInt
+  modelo        String
+  dataAquisicao DateTime
+
+  placasVaso PlacaVaso[]
+}
+
+model PlacaVaso {
+  id             Int       @id @default(autoincrement())
+  idVaso         Int
+  idPlaca        Int
+  DataInstalacao DateTime
+  DataRemocao    DateTime?
+
+  vaso  Vaso  @relation(fields: [idVaso], references: [id])
+  placa Placa @relation(fields: [idPlaca], references: [id])
+}
+
+model SensorVaso {
+  id             Int       @id @default(autoincrement())
+  idVaso         Int
+  idSensor       Int
+  DataInstalacao DateTime
+  DataRemocao    DateTime?
+
+  vaso     Vaso       @relation(fields: [idVaso], references: [id])
+  sensor   Sensor     @relation(fields: [idSensor], references: [id])
+  leituras Leituras[]
+}
+
+model Leituras {
+  id           Int      @id @default(autoincrement())
+  idSensorVaso Int
+  umidade      Int
+  status       String
+  temperatura  Float
+  datetime     DateTime
+
+  sensorVaso SensorVaso @relation(fields: [idSensorVaso], references: [id])
+}

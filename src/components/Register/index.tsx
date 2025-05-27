@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -32,6 +33,7 @@ const formSchema = z
   });
 
 export default function RegisterForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,8 +46,25 @@ export default function RegisterForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("✅ Dados do formulário:", values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const res = await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nome: values.name,
+        email: values.email,
+        senha: values.password,
+        telefone: values.phone,
+      }),
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.message);
+      router.push("/login");
+    } else {
+      alert(data.message);
+    }
   }
 
   return (

@@ -6,6 +6,7 @@ import { Radius } from "@/components/Charts/radius";
 import ModalComponent from "@/components/Modal";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function Dashbord() {
   const session = await getServerSession();
@@ -17,6 +18,7 @@ export default async function Dashbord() {
     <>
       <h1>Hello {session.user?.name}</h1>
       <Logout />
+      <Link href={"/profile"} className="bg-red-500 p-8 w-full h-12"></Link>
       <div className=" flex flex-col m-20 ">
         <div className=" flex flex-row justify-center items-center space-x-20">
           <div className="">

@@ -1,5 +1,5 @@
 "use client";
-
+import { signOut } from "next-auth/react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+import { getServerSession } from "next-auth";
 
 const formSchema = z
   .object({
@@ -32,7 +33,7 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-export default function RegisterForm() {
+export default function Profile() {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,7 +49,7 @@ export default function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const res = await fetch("/api/users", {
-      method: "POST",
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nome: values.name,
@@ -60,8 +61,8 @@ export default function RegisterForm() {
     const data = await res.json();
 
     if (res.ok) {
-      alert(data.message);
-      router.push("/login");
+      signOut();
+      router.push("/");
     } else {
       alert(data.message);
     }
@@ -71,7 +72,7 @@ export default function RegisterForm() {
     <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply h-svh">
       <div className="flex flex-col">
         <div className="w-[405px] h-auto mt-[100px] ml-[175px] justify-center items-center">
-          <h1 className="text-4xl font-bold text-white">Cadastrar-se</h1>
+          <h1 className="text-4xl font-bold text-white">Editar Perfil</h1>
 
           <Form {...form}>
             <form
@@ -83,9 +84,9 @@ export default function RegisterForm() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome {session.user?.name}</FormLabel>
+                    <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input placeholder="Malcon X" {...field} />
+                      <Input placeholder="" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -142,60 +143,12 @@ export default function RegisterForm() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar Senha</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="terms"
-                render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
-                    <FormControl>
-                      <Input
-                        type="checkbox"
-                        className="w-4 h-4"
-                        {...field}
-                        checked={field.value}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm">
-                      Eu concordo com os{" "}
-                      <span className="underline font-bold">
-                        Termos e Políticas
-                      </span>
-                    </FormLabel>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <Button
                 className="w-full bg-[#3c7225] hover:bg-[#5AAC38]"
                 type="submit"
               >
-                Cadastrar
+                Mudar dados
               </Button>
-
-              <div className="flex flex-col justify-center items-center mt-5 space-y-5">
-                <hr className="border-t border-green-800 border-1 w-full mx-auto" />
-                <Link
-                  className="block text-lg font-bold text-white"
-                  href="/login"
-                >
-                  Já tem Conta? Login
-                </Link>
-              </div>
             </form>
           </Form>
         </div>

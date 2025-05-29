@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { loginSchema, LoginFormValues } from "../../schemas/loginSchema";
 import Link from "next/link";
 import Image from "next/image";
+import { ModalReset } from "../Modal/reset";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -104,9 +105,9 @@ export default function LoginForm() {
                       disabled={isLoading}
                     >
                       {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
                         <Eye className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
                       )}
                     </Button>
                   </div>
@@ -117,12 +118,7 @@ export default function LoginForm() {
           />
 
           <div className="w-full text-right">
-            <Link
-              href="/forgot"
-              className="text-sm text-blue-600 hover:underline"
-            >
-              Esqueceu a senha?
-            </Link>
+            <ModalReset />
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>

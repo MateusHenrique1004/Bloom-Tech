@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -60,6 +61,7 @@ export default function RegisterForm() {
     const data = await res.json();
 
     if (res.ok) {
+      toast(`Usuário Cadastrado com Sucesso`);
       alert(data.message);
       router.push("/login");
     } else {
@@ -83,7 +85,7 @@ export default function RegisterForm() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome {session.user?.name}</FormLabel>
+                    <FormLabel>Nome</FormLabel>
                     <FormControl>
                       <Input placeholder="Malcon X" {...field} />
                     </FormControl>

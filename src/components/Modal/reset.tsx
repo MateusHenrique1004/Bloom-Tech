@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +15,7 @@ import { Input } from "@/components/ui/input";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginFormValues, loginSchema } from "@/schemas/loginSchema";
+import { ResetFormValues, resetSchema } from "@/schemas/resetSchema";
 import {
   Form,
   FormControl,
@@ -24,25 +25,49 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-export function ModalReset() {
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+interface ModalResetProps {
+  trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onSuccess?: () => void;
+}
+
+export function ModalReset({
+  trigger,
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+  onSuccess,
+}: ModalResetProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  const isControlled =
+    controlledOpen !== undefined && setControlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const onOpenChange = isControlled ? setControlledOpen : setInternalOpen;
+
+  const form = useForm<ResetFormValues>({
+    resolver: zodResolver(resetSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  function onSubmit(data: LoginFormValues) {
+  async function onSubmitReset(data: ResetFormValues) {
     console.log("Email para reset:", data.email);
+
+    alert(`Link de redefinição seria enviado para: ${data.email} (Simulação)`);
+    onOpenChange(false);
+    form.reset();
+    if (onSuccess) {
+      onSuccess();
+    }
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <span className="text-sm text-blue-600 hover:underline">
-          Esqueceu a senha?
-        </span>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {!isControlled && trigger && (
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      )}
 
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -53,7 +78,11 @@ export function ModalReset() {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            id="reset-form"
+            onSubmit={form.handleSubmit(onSubmitReset)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="email"
@@ -67,9 +96,17 @@ export function ModalReset() {
                 </FormItem>
               )}
             />
-
             <DialogFooter>
-              <Button type="submit">Enviar</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" form="reset-form">
+                Enviar
+              </Button>
             </DialogFooter>
           </form>
         </Form>

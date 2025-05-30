@@ -53,9 +53,22 @@ export function ModalReset({
   });
 
   async function onSubmitReset(data: ResetFormValues) {
-    console.log("Email para reset:", data.email);
+    const res = await fetch("/api/auth/reset-request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: data.email,
+      }),
+    });
 
-    alert(`Link de redefinição seria enviado para: ${data.email} (Simulação)`);
+    if (res.ok) {
+      console.log("Email para reset:", data.email);
+
+      alert(
+        `Link de redefinição seria enviado para: ${data.email} (Simulação)`
+      );
+    }
+
     onOpenChange(false);
     form.reset();
     if (onSuccess) {

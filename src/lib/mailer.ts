@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "bloomtechsuporte0@gmail.com",
-    pass: "zdsxksabazqtwhxt",
+    user: process.env.EMAIL_GOOGLE,
+    pass: process.env.PASS_GOOGLE
   },
 });
 

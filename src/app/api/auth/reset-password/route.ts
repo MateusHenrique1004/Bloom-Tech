@@ -7,10 +7,16 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const prisma = new PrismaClient();
 
-  const { token, password } = await req.json();
+  const { email, token, password } = await req.json();
 
   try {
-    const { email } = verifyResetToken(token);
+    const payload = verifyResetToken(token);
+    if (payload.email !== email) {
+      return NextResponse.json(
+        { error: "Token não corresponde ao email." },
+        { status: 400 }
+      );
+    }
     const senhaCripto = await bcrypt.hash(password, 10);
     await prisma.usuario.update({
       where: { email: email },
@@ -18,6 +24,7 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({ message: "Senha Redefinida com Sucesso" });
   } catch (err) {
+    console.log(err);
     return NextResponse.json(
       { error: "Token INVÁLIDO ou Expirado" },
       { status: 400 }

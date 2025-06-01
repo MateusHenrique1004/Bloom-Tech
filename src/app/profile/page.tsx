@@ -15,20 +15,31 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-import { getServerSession } from "next-auth";
-
 const formSchema = z
   .object({
-    name: z.string().min(2, "Nome muito curto"),
-    email: z.string().email("Email inválido"),
-    phone: z.string().min(10, "Telefone inválido"),
-    password: z.string().min(6, "Mínimo 6 caracteres"),
-    confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
-    terms: z.boolean().refine((val) => val, {
-      message: "Você precisa aceitar os termos",
-    }),
+    name: z.string().optional(),
+    email: z.string().email("Email inválido").optional(),
+    phone: z.string().optional(),
+    password: z.string().optional(),
+    confirmPassword: z.string().optional(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(
+    (data) => {
+      // Pelo menos um campo preenchido
+      return (
+        data.name ||
+        data.email ||
+        data.phone ||
+        data.password ||
+        data.confirmPassword
+      );
+    },
+    {
+      message: "Preencha ao menos um campo",
+      path: ["name"], // ou qualquer campo — serve só para exibir a mensagem
+    }
+  )
+  .refine((data) => !data.password || data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
     path: ["confirmPassword"],
   });
@@ -43,11 +54,11 @@ export default function Profile() {
       phone: "",
       password: "",
       confirmPassword: "",
-      terms: false,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("TO AQUI");
     const res = await fetch("/api/users", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -135,6 +146,19 @@ export default function Profile() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Senha</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirmar Senha</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>

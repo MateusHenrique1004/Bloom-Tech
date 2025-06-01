@@ -1,5 +1,7 @@
 import { PrismaClient } from "@/generated/prisma";
 import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -54,4 +56,26 @@ export async function PUT(request: Request) {
     { message: "Usuário Atualizado com Sucesso" },
     { status: 201 }
   );
+}
+
+export async function GET() {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user?.email) {
+    return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
+  }
+
+  const user = await prisma.usuario.findUnique({
+    where: { email: session.user.email },
+    select: { nome: true, email: true, telefone: true },
+  });
+
+  if (!user) {
+    return NextResponse.json(
+      { message: "Usuário não encontrado" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json(user);
 }

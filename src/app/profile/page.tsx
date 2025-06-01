@@ -1,5 +1,7 @@
 "use client";
-import { signOut } from "next-auth/react";
+
+import { signOut, useSession } from "next-auth/react";
+
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,30 +16,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const formSchema = z
   .object({
     name: z.string().optional(),
     email: z.string().email("Email inválido").optional(),
     phone: z.string().optional(),
-    password: z.string().optional(),
+    password: z.string().min(6, "Mínimo 6 caracteres").optional(),
     confirmPassword: z.string().optional(),
   })
   .refine(
-    (data) => {
-      // Pelo menos um campo preenchido
-      return (
-        data.name ||
-        data.email ||
-        data.phone ||
-        data.password ||
-        data.confirmPassword
-      );
-    },
-    {
-      message: "Preencha ao menos um campo",
-      path: ["name"], // ou qualquer campo — serve só para exibir a mensagem
-    }
+    (data) => !!data.name || !!data.email || !!data.phone || !!data.password,
+    { message: "Preencha pelo menos um campo" }
   )
   .refine((data) => !data.password || data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
@@ -46,6 +37,9 @@ const formSchema = z
 
 export default function Profile() {
   const router = useRouter();
+  // const { data: session } = useSession();
+  // console.log(session);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,8 +51,24 @@ export default function Profile() {
     },
   });
 
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch("/api/users/");
+      if (res.ok) {
+        const user = await res.json();
+        form.reset({
+          name: user.nome || "",
+          email: user.email || "",
+          phone: user.telefone || "",
+          password: "",
+          confirmPassword: "",
+        });
+      }
+    }
+    fetchData();
+  }, []);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("TO AQUI");
     const res = await fetch("/api/users", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -72,6 +82,7 @@ export default function Profile() {
     const data = await res.json();
 
     if (res.ok) {
+      alert("Dados atualizados! Você será deslogado.");
       signOut();
       router.push("/");
     } else {
@@ -97,7 +108,7 @@ export default function Profile() {
                   <FormItem>
                     <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input placeholder="Digite seu nome" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -145,22 +156,31 @@ export default function Profile() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Senha</FormLabel>
+                    <FormLabel>Nova senha</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Nova senha..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirmar Senha</FormLabel>
+                    <FormLabel>Confirmar senha</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Confirme a senha..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -171,7 +191,7 @@ export default function Profile() {
                 className="w-full bg-[#3c7225] hover:bg-[#5AAC38]"
                 type="submit"
               >
-                Mudar dados
+                Atualizar dados
               </Button>
             </form>
           </Form>

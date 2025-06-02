@@ -18,7 +18,10 @@ export default async function Dashbord() {
     <>
       <h1>Hello {session.user?.name}</h1>
       <Logout />
-      <Link href={"/profile"} className="bg-red-500 p-8 w-full h-12"></Link>
+      <Link href={"/profile"} className="bg-red-500 p-8 w-full h-12">
+        {" "}
+        Imagem perfil
+      </Link>
       <div className=" flex flex-col m-20 ">
         <div className=" flex flex-row justify-center items-center space-x-20">
           <div className="">

@@ -202,7 +202,7 @@ export default function Section() {
             subtitle="E quero mais, com esses vasos, meu sonho de ter meu jardim é real e tudo no meu AP!!!"
           />
         </div>
-        <div className=" flex flex-col justify-center mt-20">
+        <div className=" flex flex-col justify-center mt-20 ">
           <h1 className="text-center text-5xl font-bold">
             Perguntas Frequentes - FAQ
           </h1>

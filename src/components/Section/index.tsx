@@ -4,8 +4,6 @@ import {
   faSquareArrowUpRight,
   faTachographDigital,
 } from "@fortawesome/free-solid-svg-icons";
-import Carroussel from "../Carroussel";
-import teste from "../../../public/fundo3.jpg";
 import Image from "next/image";
 import Card from "../Card";
 import { FadeInText } from "../Fade/FadeInText";
@@ -13,7 +11,6 @@ import CardTestimoninal from "../Card/testimonial";
 import Link from "next/link";
 import Accordion from "../BlogContent/accordion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CardPlants from "../plants/plant";
 import CarouselPlants from "../Carroussel/plant";
 
 export default function Section() {
@@ -52,7 +49,7 @@ export default function Section() {
 
       <section className="w-full max-w-[1340px] mx-auto px-4 h-[400px] flex flex-col justify-center items-center">
         <h1 className="text-5xl font-bold"> Vasos mais Vendidos</h1>
-      <CarouselPlants/>
+        <CarouselPlants />
       </section>
 
       <FadeInText direction="left">

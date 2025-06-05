@@ -21,7 +21,13 @@ export const authOptions: AuthOptions = {
             credentials.password,
             user.senha
           );
-          if (isValid) return user;
+          if (isValid) {
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.nome,
+            };
+          }
         }
         return null;
       },

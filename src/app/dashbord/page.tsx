@@ -1,13 +1,19 @@
-import Logout from "@/components/Button/logout";
 import UseAnimationFrame from "@/components/Charts/object";
-import Fc from "../../../public/vase/fc-28.png";
+import Fc from "../../../public/sensors/fc-28.png";
+import Bomba from "../../../public/sensors/bombAgua.png";
+import Esp from "../../../public/sensors/esp-32.png";
+import Dht from "../../../public/sensors/dht11.png";
+import Rele from "../../../public/sensors/rele.png";
+
 import { PieCharts } from "@/components/Charts/pizza";
 import { Radius } from "@/components/Charts/radius";
 import ModalComponent from "@/components/Modal";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLeaf, faUserEdit } from "@fortawesome/free-solid-svg-icons";
 
 export default async function Dashbord() {
   const session = await getServerSession();
@@ -18,50 +24,57 @@ export default async function Dashbord() {
   }
   return (
     <>
-      <h1>Hello {session.user?.name}</h1>
-      <Logout />
+      <h1 className="text-center text-[#3c7225] text-4xl">
+        Olá {session.user?.name}
+      </h1>
       <div className="flex flex-col space-y-3">
-        <Link
-          href={"/profile"}
-          className="bg-red-500 p-4 w-4 h-4 rounded-xl "
-        ></Link>
-        <div className="space-x-5 ">
-          <Link
-            href={"/editPlanta"}
-            className=" bg-amber-300 p-4 w-4 h-4 rounded-xl flex flex-row justify-center items-center "
-          >
-            <Image
-              src={"/alecrim.jpg"}
-              width={20}
-              height={20}
-              alt="imagem perfil"
-            />
-            <p className="text-base "> as</p>
-          </Link>
-        </div>
+        <Link href="/profile">
+          <Button className="w-32 flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white">
+            <FontAwesomeIcon icon={faUserEdit} className="text-sm" />
+            <span>Editar Perfil</span>
+          </Button>
+        </Link>
+
+        <Link href="/editPlanta">
+          <Button className="w-32 flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white">
+            <FontAwesomeIcon icon={faLeaf} className="text-sm" />
+            <span>Editar Planta</span>
+          </Button>
+        </Link>
       </div>
+
       <div className=" flex flex-col m-20 ">
         <div className=" flex flex-row justify-center items-center space-x-20">
-          <div className="">
-            <UseAnimationFrame />
-            <ModalComponent
-              image={Fc}
-              title="FC-28"
-              description="O sensor FC-28 é um sensor de umidade do solo, que utiliza um método
-            de medição eletromagnética para determinar a umidade do solo."
-            />
-            <ModalComponent
-              image={Fc}
-              title="FC-28"
-              description="O sensor FC-28 é um sensor de umidade do solo, que utiliza um método
-            de medição eletromagnética para determinar a umidade do solo."
-            />
-            <ModalComponent
-              image={Fc}
-              title="FC-28"
-              description="O sensor FC-28 é um sensor de umidade do solo, que utiliza um método
-            de medição eletromagnética para determinar a umidade do solo."
-            />
+          <div className="flex flex-col items-center space-y-6 ">
+            <UseAnimationFrame />{" "}
+            <h1 className="text-3xl text-[#5AAC38]">Equipamentos</h1>
+            <div className="flex flex-wrap justify-center gap-6">
+              <ModalComponent
+                image={Fc}
+                title="FC-28"
+                description="O sensor FC-28 é um sensor de umidade do solo, que utiliza um método de medição eletromagnética para determinar a umidade do solo."
+              />
+              <ModalComponent
+                image={Dht}
+                title="DHT-11"
+                description="O sensor DHT-11 é um sensor de umidade e Temperatura do ar."
+              />
+              <ModalComponent
+                image={Rele}
+                title="Rele 5v"
+                description="O rele é o responsável por ativar a bomba da água, ele libera o circuito para trazer a água ao vaso."
+              />
+              <ModalComponent
+                image={Esp}
+                title="ESP-32"
+                description="O ESP-32 é o microcontrolador responsável pela comunicação dos sensores com o meio. Com ele os dados são transferidos."
+              />
+              <ModalComponent
+                image={Bomba}
+                title="Mini Bomba d' Água"
+                description="Mini Bomba D' Água é o atuador responsável por puxar a água e transferir para a mangueira regadora."
+              />
+            </div>
           </div>
 
           <div className="flex flex-row justify-between">

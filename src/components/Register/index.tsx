@@ -72,10 +72,15 @@ export default function RegisterForm() {
   return (
     <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply min-h-screen flex justify-start items-start py-20 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-gray-700 bg-opacity-50 p-8 rounded-lg shadow-lg ml-8">
-        <h1 className="text-4xl font-bold text-white text-center mb-8">Cadastrar-se</h1>
+        <h1 className="text-4xl font-bold text-white text-center mb-8">
+          Cadastrar-se
+        </h1>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 text-white">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-5 text-white"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -97,7 +102,11 @@ export default function RegisterForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="exemplo@email.com" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="exemplo@email.com"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -111,7 +120,11 @@ export default function RegisterForm() {
                 <FormItem>
                   <FormLabel>Telefone</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="(12) 99185-5231" {...field} />
+                    <Input
+                      type="tel"
+                      placeholder="(12) 99185-5231"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,20 +174,28 @@ export default function RegisterForm() {
                   </FormControl>
                   <FormLabel className="text-sm">
                     Eu concordo com os{" "}
-                    <span className="underline font-bold">Termos e Políticas</span>
+                    <span className="underline font-bold">
+                      Termos e Políticas
+                    </span>
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button className="w-full bg-[#3c7225] hover:bg-[#5AAC38]" type="submit">
+            <Button
+              className="w-full bg-[#3c7225] hover:bg-[#5AAC38]"
+              type="submit"
+            >
               Cadastrar
             </Button>
 
             <div className="flex flex-col justify-center items-center mt-5 space-y-5">
               <hr className="border-t border-green-800 border-1 w-full mx-auto" />
-              <Link className="block text-lg font-bold text-white" href="/login">
+              <Link
+                className="block text-lg font-bold text-white"
+                href="/login"
+              >
                 Já tem Conta? Login
               </Link>
             </div>

@@ -4,6 +4,8 @@ import {
   faSquareArrowUpRight,
   faTachographDigital,
 } from "@fortawesome/free-solid-svg-icons";
+import Carroussel from "../Carroussel";
+import teste from "../../../public/fundo3.jpg";
 import Image from "next/image";
 import Card from "../Card";
 import { FadeInText } from "../Fade/FadeInText";
@@ -11,6 +13,7 @@ import CardTestimoninal from "../Card/testimonial";
 import Link from "next/link";
 import Accordion from "../BlogContent/accordion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CardPlants from "../plants/plant";
 import CarouselPlants from "../Carroussel/plant";
 
 export default function Section() {
@@ -63,9 +66,10 @@ export default function Section() {
                 </h1>
                 <span className="text-lg text-justify">
                   Porque somos uma empresa que sempre busca tratar nossos
-                  clientes com o melhor! Atuamos com praticidade, confiabilidade,
-                  amor e segurança! Todos nossos produtos atendem as demandas
-                  atuais do mercado com um toque único nosso: a Tecnologia.
+                  clientes com o melhor! Atuamos com praticidade,
+                  confiabilidade, amor e segurança! Todos nossos produtos
+                  atendem as demandas atuais do mercado com um toque único
+                  nosso: a Tecnologia.
                 </span>
               </div>
             </div>

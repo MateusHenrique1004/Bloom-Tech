@@ -44,8 +44,8 @@ export function ChartLine() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Umidade do Ar</CardTitle>
+        <CardDescription>Maio - Junho 2025</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

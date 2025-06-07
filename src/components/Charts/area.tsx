@@ -46,9 +46,9 @@ export function ChartArea() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Legend</CardTitle>
+        <CardTitle>Temperatura</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Maio - Junho 2025
         </CardDescription>
       </CardHeader>
       <CardContent>

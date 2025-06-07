@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AlertDialogDefault } from "../Alert/alertDialog";
 
 const formSchema = z
   .object({
@@ -71,8 +72,8 @@ export default function RegisterForm() {
 
   return (
     <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply min-h-screen flex justify-start items-start py-20 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md bg-gray-700 bg-opacity-50 p-8 rounded-lg shadow-lg ml-8">
-        <h1 className="text-4xl font-bold text-white text-center mb-8">
+      <div className="w-full max-w-md bg-white bg-opacity-50 p-8 rounded-lg shadow-lg ml-8 text-[]">
+        <h1 className="text-4xl font-bold text-[#3A5B22] text-center mb-8">
           Cadastrar-se
         </h1>
 
@@ -85,10 +86,14 @@ export default function RegisterForm() {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="text-black">
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder="Malcon X" {...field} />
+                    <Input
+                      className=""
+                      placeholder="Oliver Almeida"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,7 +104,7 @@ export default function RegisterForm() {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="text-black">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
@@ -117,7 +122,7 @@ export default function RegisterForm() {
               control={form.control}
               name="phone"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="text-black">
                   <FormLabel>Telefone</FormLabel>
                   <FormControl>
                     <Input
@@ -135,7 +140,7 @@ export default function RegisterForm() {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="text-black">
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
@@ -149,7 +154,7 @@ export default function RegisterForm() {
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="text-black">
                   <FormLabel>Confirmar Senha</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
@@ -172,11 +177,8 @@ export default function RegisterForm() {
                       checked={field.value}
                     />
                   </FormControl>
-                  <FormLabel className="text-sm">
-                    Eu concordo com os{" "}
-                    <span className="underline font-bold">
-                      Termos e Políticas
-                    </span>
+                  <FormLabel className="text-sm  text-black">
+                    Eu concordo com os <AlertDialogDefault />
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
@@ -184,7 +186,7 @@ export default function RegisterForm() {
             />
 
             <Button
-              className="w-full bg-[#3c7225] hover:bg-[#5AAC38]"
+              className="w-full bg-[#3A5B22] hover:bg-[#5AAC38]"
               type="submit"
             >
               Cadastrar
@@ -193,7 +195,7 @@ export default function RegisterForm() {
             <div className="flex flex-col justify-center items-center mt-5 space-y-5">
               <hr className="border-t border-green-800 border-1 w-full mx-auto" />
               <Link
-                className="block text-lg font-bold text-white"
+                className="block text-lg font-bold text-black"
                 href="/login"
               >
                 Já tem Conta? Login

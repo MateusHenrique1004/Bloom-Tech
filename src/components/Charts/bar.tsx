@@ -46,8 +46,8 @@ export function ChartBar() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Stacked + Legend</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Umidade do Solo</CardTitle>
+        <CardDescription>Maio - Junho 2025</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>

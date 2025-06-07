@@ -4,9 +4,6 @@ import Bomba from "../../../public/sensors/bombAgua.png";
 import Esp from "../../../public/sensors/esp-32.png";
 import Dht from "../../../public/sensors/dht11.png";
 import Rele from "../../../public/sensors/rele.png";
-
-import { PieCharts } from "@/components/Charts/pizza";
-import { Radius } from "@/components/Charts/radius";
 import ModalComponent from "@/components/Modal";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";

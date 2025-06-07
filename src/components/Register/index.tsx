@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertDialogDefault } from "../Alert/alertDialog";
+import { QrCodeIcon } from "lucide-react";
 
 const formSchema = z
   .object({
@@ -25,6 +26,13 @@ const formSchema = z
     phone: z.string().min(10, "Telefone inválido"),
     password: z.string().min(6, "Mínimo 6 caracteres"),
     confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
+    hasVaso: z.boolean().optional(),
+    vasoSerialNumber: z
+      .number()
+      .int("Deve ser um número inteiro")
+      .min(100000, "Deve ter exatamente 6 dígitos")
+      .max(999999, "Deve ter exatamente 6 dígitos")
+      .optional(),
     terms: z.boolean().refine((val) => val, {
       message: "Você precisa aceitar os termos",
     }),
@@ -44,32 +52,56 @@ export default function RegisterForm() {
       phone: "",
       password: "",
       confirmPassword: "",
+      hasVaso: false,
+      vasoSerialNumber: undefined,
       terms: false,
     },
   });
+  const handleScanQRCode = () => {
+    const fakeQRCodeValue = Math.floor(100000 + Math.random() * 900000);
+    form.setValue("vasoSerialNumber", fakeQRCodeValue);
+    form.setValue("hasVaso", true);
+    toast.success("QR Code lido com sucesso!");
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await fetch("/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nome: values.name,
-        email: values.email,
-        senha: values.password,
-        telefone: values.phone,
-      }),
-    });
-    const data = await res.json();
+    try {
+      const userRes = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: values.name,
+          email: values.email,
+          senha: values.password,
+          telefone: values.phone,
+        }),
+      });
 
-    if (res.ok) {
-      toast(`Usuário Cadastrado com Sucesso`);
-      alert(data.message);
+      if (!userRes.ok) throw new Error(await userRes.text());
+
+      const userData = await userRes.json();
+
+      if (values.hasVaso && values.vasoSerialNumber) {
+        const vasoRes = await fetch("/api/vasos/link", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: userData.id,
+            serialNumber: values.vasoSerialNumber,
+          }),
+        });
+
+        if (!vasoRes.ok) throw new Error(await vasoRes.text());
+      }
+
+      toast.success("Cadastro realizado com sucesso!");
       router.push("/login");
-    } else {
-      alert(data.message);
+    } catch (error) {
+      toast.error("Erro no cadastro", {
+        description: error.message || "Tente novamente mais tarde",
+      });
     }
   }
-
   return (
     <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply min-h-screen flex justify-start items-start py-20 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-white bg-opacity-50 p-8 rounded-lg shadow-lg ml-8 text-[]">
@@ -163,6 +195,74 @@ export default function RegisterForm() {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="hasVaso"
+              render={({ field }) => (
+                <FormItem className="flex flex-col space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <FormControl>
+                      <Input
+                        type="checkbox"
+                        className="w-4 h-4"
+                        checked={field.value}
+                        onChange={(e) => {
+                          field.onChange(e.target.checked);
+                          if (!e.target.checked) {
+                            form.setValue("vasoSerialNumber", undefined);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel className="text-sm text-black">
+                      Já possui vaso?
+                    </FormLabel>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {form.watch("hasVaso") && (
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="vasoSerialNumber"
+                  render={({ field }) => (
+                    <FormItem className="text-black">
+                      <FormLabel>Número de série do vaso (6 dígitos)</FormLabel>
+                      <div className="flex gap-2">
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="123456"
+                            {...field}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value);
+                              field.onChange(isNaN(value) ? undefined : value);
+                            }}
+                          />
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleScanQRCode}
+                          className="flex items-center gap-2"
+                        >
+                          <QrCodeIcon className="h-4 w-4" />
+                          Ler QR Code
+                        </Button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <p className="text-sm text-gray-600">
+                  Escaneie o QR Code do seu vaso ou digite manualmente
+                </p>
+              </div>
+            )}
 
             <FormField
               control={form.control}

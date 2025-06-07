@@ -14,6 +14,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeaf, faUserEdit } from "@fortawesome/free-solid-svg-icons";
+import { ChartArea } from "@/components/Charts/area";
+import { ChartBar } from "@/components/Charts/bar";
+import { ChartLine } from "@/components/Charts/line";
 
 export default async function Dashbord() {
   const session = await getServerSession();
@@ -27,15 +30,15 @@ export default async function Dashbord() {
       <h1 className="text-center text-[#3c7225] text-4xl">
         Olá {session.user?.name}
       </h1>
-      <div className="flex flex-col space-y-3">
-        <Link href="/profile">
-          <Button className="w-32 flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white">
+      <div className="flex flex-col space-y-3 ">
+        <Link href="/profile" className="w-32">
+          <Button className="max-w-32 flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white">
             <FontAwesomeIcon icon={faUserEdit} className="text-sm" />
             <span>Editar Perfil</span>
           </Button>
         </Link>
 
-        <Link href="/editPlanta">
+        <Link href="/editPlanta" className="w-32">
           <Button className="w-32 flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white">
             <FontAwesomeIcon icon={faLeaf} className="text-sm" />
             <span>Editar Planta</span>
@@ -48,7 +51,7 @@ export default async function Dashbord() {
           <div className="flex flex-col items-center space-y-6 ">
             <UseAnimationFrame />{" "}
             <h1 className="text-3xl text-[#5AAC38]">Equipamentos</h1>
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex flex-nowrap justify-center gap-6">
               <ModalComponent
                 image={Fc}
                 title="FC-28"
@@ -78,17 +81,9 @@ export default async function Dashbord() {
           </div>
 
           <div className="flex flex-row justify-between">
-            <div className="p-4 bg-black ">
-              <Radius />
-            </div>
-
-            <div className="p-4 bg-black ">
-              <Radius />
-            </div>
-
-            <div className="p-4 bg-black ">
-              <PieCharts />
-            </div>
+            <ChartArea />
+            <ChartLine />
+            <ChartBar />
           </div>
         </div>
       </div>

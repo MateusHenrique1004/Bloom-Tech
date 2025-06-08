@@ -18,7 +18,7 @@ export default async function handler(
     const placaVaso = await prisma.placaVaso.findFirst({
       where: {
         placa: { numeroSerie: serialNumber },
-        vaso: { idUser: 0 },
+        vaso: { idUser: null },
       },
       include: { vaso: true },
     });

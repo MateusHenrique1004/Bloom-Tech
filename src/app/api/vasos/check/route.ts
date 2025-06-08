@@ -35,7 +35,9 @@ export default async function handler(
       });
     }
 
-    const vasoDisponivel = placa.placasVaso.some((pv) => pv.vaso.idUser === 0);
+    const vasoDisponivel = placa.placasVaso.some(
+      (pv) => pv.vaso.idUser === null
+    );
     return res.status(200).json({
       exists: true,
       available: vasoDisponivel,

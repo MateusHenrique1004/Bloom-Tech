@@ -15,8 +15,10 @@ export default async function handler(
 
   try {
     const serialNumber = BigInt(serial as string);
-    const placa = await prisma.placa.findUnique({
-      where: { numeroSerie: serialNumber },
+    const placa = await prisma.placa.findFirst({
+      where: {
+        numeroSerie: serialNumber,
+      },
       include: {
         placasVaso: {
           include: {
@@ -27,16 +29,22 @@ export default async function handler(
     });
 
     if (!placa) {
-      return res.status(200).json({ exists: false });
+      return res.status(200).json({
+        exists: false,
+        available: false,
+      });
     }
 
-    const vaso = placa.placasVaso[0]?.vaso;
+    const vasoDisponivel = placa.placasVaso.some((pv) => pv.vaso.idUser === 0);
     return res.status(200).json({
       exists: true,
-      hasVaso: !!placa.placasVaso.length,
-      available: vaso ? !vaso.idUser : false,
+      available: vasoDisponivel,
     });
   } catch (error) {
-    return res.status(500).json({ valid: false });
+    console.error("Erro na verificação:", error);
+    return res.status(500).json({
+      valid: false,
+      error: "Erro interno no servidor",
+    });
   }
 }

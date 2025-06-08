@@ -28,10 +28,10 @@ const formSchema = z
     confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
     hasVaso: z.boolean().optional(),
     placaSerialNumber: z
-      .number()
-      .int("Deve ser um número inteiro")
-      .min(100000, "Deve ter exatamente 6 dígitos")
-      .max(999999, "Deve ter exatamente 6 dígitos")
+      .bigint()
+      .refine((val) => val >= 100000n && val <= 999999n, {
+        message: "Deve ter exatamente 6 dígitos",
+      })
       .optional(),
     terms: z.boolean().refine((val) => val, {
       message: "Você precisa aceitar os termos",
@@ -58,7 +58,7 @@ export default function RegisterForm() {
     },
   });
   const handleScanQRCode = () => {
-    const fakeQRCodeValue = Math.floor(100000 + Math.random() * 900000);
+    const fakeQRCodeValue = BigInt(Math.floor(100000 + Math.random() * 900000));
     form.setValue("placaSerialNumber", fakeQRCodeValue);
     form.setValue("hasVaso", true);
     toast.success("QR Code lido com sucesso!");
@@ -82,16 +82,19 @@ export default function RegisterForm() {
       const userData = await userRes.json();
 
       if (values.hasVaso && values.placaSerialNumber) {
-        const placaRes = await fetch("/api/placas/link", {
+        const vasoRes = await fetch("/api/vaso/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: userData.id,
-            placaSerialNumber: values.placaSerialNumber,
+            numeroSerie: values.placaSerialNumber.toString(),
           }),
         });
 
-        if (!placaRes.ok) throw new Error(await placaRes.text());
+        if (!vasoRes.ok) {
+          const errorData = await vasoRes.json();
+          throw new Error(errorData.error || "Erro ao vincular placa");
+        }
       }
 
       toast.success("Cadastro realizado com sucesso!");
@@ -235,12 +238,14 @@ export default function RegisterForm() {
                       <FormControl>
                         <Input
                           placeholder="123456"
-                          {...field}
+                          value={field.value?.toString() || ""}
                           onChange={(e) => {
-                            const value = BigInt(e.target.value);
-                            field.onChange(
-                              isNaN(Number(value)) ? undefined : value
-                            );
+                            try {
+                              const value = BigInt(e.target.value);
+                              field.onChange(value);
+                            } catch {
+                              field.onChange(undefined);
+                            }
                           }}
                         />
                       </FormControl>

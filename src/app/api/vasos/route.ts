@@ -1,5 +1,5 @@
 import { PrismaClient } from "@/generated/prisma";
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
@@ -7,36 +7,35 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { serial } = req.query;
-  
-  if (!serial) {
-    return res.status(400).json({ valid: false });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Método não permitido" });
   }
 
   try {
-    const serialNumber = BigInt(serial as string);
-    const placa = await prisma.placa.findUnique({
-      where: { numeroSerie: serialNumber },
-      include: {
-        placasVaso: {
-          include: {
-            vaso: true
-          }
-        }
-      }
+    const { userId, numeroSerie } = req.body;
+    const serialNumber = BigInt(numeroSerie);
+
+    const placaVaso = await prisma.placaVaso.findFirst({
+      where: {
+        placa: { numeroSerie: serialNumber },
+        vaso: { idUser: 0 },
+      },
+      include: { vaso: true },
     });
 
-    if (!placa) {
-      return res.status(200).json({ exists: false });
+    if (!placaVaso) {
+      return res.status(404).json({
+        error: "Vaso não encontrado ou já vinculado",
+      });
     }
 
-    const vaso = placa.placasVaso[0]?.vaso;
-    return res.status(200).json({
-      exists: true,
-      hasVaso: !!placa.placasVaso.length,
-      available: vaso ? !vaso.idUser : false
+    await prisma.vaso.update({
+      where: { id: placaVaso.vaso.id },
+      data: { idUser: userId },
     });
+
+    return res.status(200).json({ success: true });
   } catch (error) {
-    return res.status(500).json({ valid: false });
+    return res.status(500).json({ error: "Erro interno" });
   }
 }

@@ -27,7 +27,7 @@ const formSchema = z
     password: z.string().min(6, "Mínimo 6 caracteres"),
     confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
     hasVaso: z.boolean().optional(),
-    vasoSerialNumber: z
+    placaSerialNumber: z
       .number()
       .int("Deve ser um número inteiro")
       .min(100000, "Deve ter exatamente 6 dígitos")
@@ -53,13 +53,13 @@ export default function RegisterForm() {
       password: "",
       confirmPassword: "",
       hasVaso: false,
-      vasoSerialNumber: undefined,
+      placaSerialNumber: undefined,
       terms: false,
     },
   });
   const handleScanQRCode = () => {
     const fakeQRCodeValue = Math.floor(100000 + Math.random() * 900000);
-    form.setValue("vasoSerialNumber", fakeQRCodeValue);
+    form.setValue("placaSerialNumber", fakeQRCodeValue);
     form.setValue("hasVaso", true);
     toast.success("QR Code lido com sucesso!");
   };
@@ -81,21 +81,22 @@ export default function RegisterForm() {
 
       const userData = await userRes.json();
 
-      if (values.hasVaso && values.vasoSerialNumber) {
-        const vasoRes = await fetch("/api/vasos/link", {
+      if (values.hasVaso && values.placaSerialNumber) {
+        const placaRes = await fetch("/api/placas/link", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: userData.id,
-            serialNumber: values.vasoSerialNumber,
+            placaSerialNumber: values.placaSerialNumber,
           }),
         });
 
-        if (!vasoRes.ok) throw new Error(await vasoRes.text());
+        if (!placaRes.ok) throw new Error(await placaRes.text());
       }
 
       toast.success("Cadastro realizado com sucesso!");
       router.push("/login");
+      toast("BEM-VINDO");
     } catch (error) {
       toast.error("Erro no cadastro", {
         description: error.message || "Tente novamente mais tarde",
@@ -210,7 +211,7 @@ export default function RegisterForm() {
                         onChange={(e) => {
                           field.onChange(e.target.checked);
                           if (!e.target.checked) {
-                            form.setValue("vasoSerialNumber", undefined);
+                            form.setValue("placaSerialNumber", undefined);
                           }
                         }}
                       />
@@ -223,47 +224,40 @@ export default function RegisterForm() {
                 </FormItem>
               )}
             />
-
             {form.watch("hasVaso") && (
-              <div className="space-y-2">
-                <FormField
-                  control={form.control}
-                  name="vasoSerialNumber"
-                  render={({ field }) => (
-                    <FormItem className="text-black">
-                      <FormLabel>Número de série do vaso (6 dígitos)</FormLabel>
-                      <div className="flex gap-2">
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="123456"
-                            {...field}
-                            onChange={(e) => {
-                              const value = parseInt(e.target.value);
-                              field.onChange(isNaN(value) ? undefined : value);
-                            }}
-                          />
-                        </FormControl>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={handleScanQRCode}
-                          className="flex items-center gap-2"
-                        >
-                          <QrCodeIcon className="h-4 w-4" />
-                          Ler QR Code
-                        </Button>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <p className="text-sm text-gray-600">
-                  Escaneie o QR Code do seu vaso ou digite manualmente
-                </p>
-              </div>
+              <FormField
+                control={form.control}
+                name="placaSerialNumber"
+                render={({ field }) => (
+                  <FormItem className="text-black">
+                    <FormLabel>Número de série da placa (6 dígitos)</FormLabel>
+                    <div className="flex gap-2">
+                      <FormControl>
+                        <Input
+                          placeholder="123456"
+                          {...field}
+                          onChange={(e) => {
+                            const value = BigInt(e.target.value);
+                            field.onChange(
+                              isNaN(Number(value)) ? undefined : value
+                            );
+                          }}
+                        />
+                      </FormControl>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleScanQRCode}
+                      >
+                        <QrCodeIcon className="h-4 w-4 mr-2" />
+                        Ler QR Code
+                      </Button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
-
             <FormField
               control={form.control}
               name="terms"

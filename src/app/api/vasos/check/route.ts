@@ -1,5 +1,5 @@
 import { PrismaClient } from "@/generated/prisma";
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { serial } = req.query;
-  
+
   if (!serial) {
     return res.status(400).json({ valid: false });
   }
@@ -20,10 +20,10 @@ export default async function handler(
       include: {
         placasVaso: {
           include: {
-            vaso: true
-          }
-        }
-      }
+            vaso: true,
+          },
+        },
+      },
     });
 
     if (!placa) {
@@ -34,7 +34,7 @@ export default async function handler(
     return res.status(200).json({
       exists: true,
       hasVaso: !!placa.placasVaso.length,
-      available: vaso ? !vaso.idUser : false
+      available: vaso ? !vaso.idUser : false,
     });
   } catch (error) {
     return res.status(500).json({ valid: false });

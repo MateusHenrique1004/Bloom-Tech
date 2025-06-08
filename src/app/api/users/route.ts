@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   }
   const senhaCripto = await bcrypt.hash(senha, 10);
 
-  await prisma.usuario.create({
+  const USER = await prisma.usuario.create({
     data: {
       nome,
       email,
@@ -30,10 +30,7 @@ export async function POST(request: Request) {
     },
   });
 
-  return NextResponse.json(
-    { message: "Usuário Criado com Sucesso" },
-    { status: 201 }
-  );
+  return NextResponse.json({ id: USER.id });
 }
 
 export async function PUT(request: Request) {

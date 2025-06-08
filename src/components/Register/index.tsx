@@ -28,10 +28,8 @@ const formSchema = z
     confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
     hasVaso: z.boolean().optional(),
     placaSerialNumber: z
-      .bigint()
-      .refine((val) => val >= 100000n && val <= 999999n, {
-        message: "Deve ter exatamente 6 dígitos",
-      })
+      .string()
+      .regex(/^\d{6}$/, { message: "Deve conter exatamente 6 dígitos" })
       .optional(),
     terms: z.boolean().refine((val) => val, {
       message: "Você precisa aceitar os termos",
@@ -58,8 +56,7 @@ export default function RegisterForm() {
     },
   });
   const handleScanQRCode = () => {
-    const fakeQRCodeValue = BigInt(Math.floor(100000 + Math.random() * 900000));
-    form.setValue("placaSerialNumber", fakeQRCodeValue);
+    form.setValue("placaSerialNumber", "12334");
     form.setValue("hasVaso", true);
     toast.success("QR Code lido com sucesso!");
   };
@@ -82,12 +79,12 @@ export default function RegisterForm() {
       const userData = await userRes.json();
 
       if (values.hasVaso && values.placaSerialNumber) {
-        const vasoRes = await fetch("/api/vaso/", {
+        const vasoRes = await fetch("/api/vasos", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: userData.id,
-            numeroSerie: values.placaSerialNumber.toString(),
+            numeroSerie: values.placaSerialNumber,
           }),
         });
 
@@ -238,13 +235,11 @@ export default function RegisterForm() {
                       <FormControl>
                         <Input
                           placeholder="123456"
-                          value={field.value?.toString() || ""}
+                          value={field.value || ""}
                           onChange={(e) => {
-                            try {
-                              const value = BigInt(e.target.value);
+                            const value = e.target.value;
+                            if (/^\d{0,6}$/.test(value)) {
                               field.onChange(value);
-                            } catch {
-                              field.onChange(undefined);
                             }
                           }}
                         />

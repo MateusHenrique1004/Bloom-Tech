@@ -88,7 +88,7 @@ model Plantio {
 
 model Placa {
   id            Int      @id @default(autoincrement())
-  numeroSerie   BigInt   @unique
+  numeroSerie   Int      @unique
   modelo        String
   dataAquisicao DateTime
 

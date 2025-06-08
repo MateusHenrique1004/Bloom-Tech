@@ -1,15 +1,14 @@
-import { faBasketShopping, faShop, faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { faBasketShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image, { StaticImageData } from "next/image";
-import Link from "next/link";
 
 interface CardPlantsProps {
-  title: string;
-  text: string;
+  name: string;
+  nameCientific: string;
   src: StaticImageData;
 }
 
-export default function CardPlants({ title, text, src }: CardPlantsProps) {
+export default function CardPlants({ name, nameCientific, src }: CardPlantsProps) {
   return (
     <div className="w-[295px] h-[317px]  bg-white shadow-md rounded-[10px] overflow-hidden border border-gray-200">
       <Image
@@ -19,14 +18,13 @@ export default function CardPlants({ title, text, src }: CardPlantsProps) {
       />
 
       <div className="p-2 flex flex-col justify-between">
-        <h4 className="text-lg font-semibold text-black">{title}</h4>
+        <h4 className="text-lg font-semibold text-black">{name}</h4>
 
-        
         <div className="flex flex-row justify-between">
-        <p className="text-sm text-justify break-words font-medium text-gray-700 mt-2">
-          {text}
-        </p>
-        <span className="ml-2 p-1 rounded-full ">
+          <p className="text-sm text-justify break-words font-medium text-gray-700 mt-2">
+            {nameCientific}
+          </p>
+          <span className="ml-2 p-1 rounded-full ">
             <FontAwesomeIcon
               icon={faBasketShopping}
               className="text-[#5AAC38]"

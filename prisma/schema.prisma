@@ -56,7 +56,7 @@ model TipoSensor {
 model Sensor {
   id            Int      @id @default(autoincrement())
   idTipoSensor  Int
-  numeroSerie   BigInt
+  numeroSerie   Int
   dataAquisicao DateTime
 
   tipo         TipoSensor   @relation(fields: [idTipoSensor], references: [id])

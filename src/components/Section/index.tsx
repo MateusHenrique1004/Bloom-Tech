@@ -50,7 +50,7 @@ export default function Section() {
       </section>
 
       <section className="w-full max-w-[1340px] mx-auto px-4 h-auto md:h-[400px] flex flex-col justify-center items-center">
-        <h1 className="text-5xl font-bold"> Vasos mais Vendidos</h1>
+        <h1 className="text-5xl font-bold"> Plantas mais Escolhidas</h1>
         <CarouselPlants />
       </section>
 

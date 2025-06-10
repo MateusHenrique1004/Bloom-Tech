@@ -76,3 +76,30 @@ export async function GET() {
 
   return NextResponse.json(user);
 }
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("id");
+
+  if (!userId) {
+    return NextResponse.json(
+      { message: "ID do usuário não fornecido" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    await prisma.usuario.delete({
+      where: { id: parseInt(userId) },
+    });
+
+    return NextResponse.json(
+      { message: "Usuário deletado com sucesso" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Erro ao deletar usuário", error: error },
+      { status: 500 }
+    );
+  }
+}

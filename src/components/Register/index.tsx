@@ -84,25 +84,31 @@ export default function RegisterForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: userData.id,
-            numeroSerie: values.placaSerialNumber,
+            numeroSerie: parseInt(values.placaSerialNumber),
           }),
         });
 
         if (!vasoRes.ok) {
           const errorData = await vasoRes.json();
-          throw new Error(errorData.error || "Erro ao vincular placa");
+
+          await fetch(`/api/users?id=${userData.id}`, {
+            method: "DELETE",
+          });
+
+          throw new Error(errorData.error || "Erro ao cadastrar vaso");
         }
       }
 
       toast.success("Cadastro realizado com sucesso!");
-      router.push("/login");
       toast("BEM-VINDO");
+      router.push("/login");
     } catch (error) {
       toast.error("Erro no cadastro", {
         description: error.message || "Tente novamente mais tarde",
       });
     }
   }
+
   return (
     <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply min-h-screen flex justify-start items-start py-20 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-white bg-opacity-50 p-8 rounded-lg shadow-lg ml-8 text-[]">
@@ -237,10 +243,10 @@ export default function RegisterForm() {
                           placeholder="123456"
                           value={field.value || ""}
                           onChange={(e) => {
-                            const value = e.target.value;
-                            if (/^\d{0,6}$/.test(value)) {
-                              field.onChange(value);
-                            }
+                            const value = e.target.value
+                              .replace(/[^\d]/g, "")
+                              .slice(0, 6);
+                            field.onChange(value);
                           }}
                         />
                       </FormControl>

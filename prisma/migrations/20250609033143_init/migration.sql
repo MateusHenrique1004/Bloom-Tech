@@ -3,7 +3,7 @@ CREATE TABLE "Usuario" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "nome" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "telefone" TEXT NOT NULL,
+    "telefone" TEXT,
     "senha" TEXT NOT NULL
 );
 
@@ -40,7 +40,7 @@ CREATE TABLE "TipoSensor" (
 CREATE TABLE "Sensor" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "idTipoSensor" INTEGER NOT NULL,
-    "numeroSerie" BIGINT NOT NULL,
+    "numeroSerie" INTEGER NOT NULL,
     "dataAquisicao" DATETIME NOT NULL,
     CONSTRAINT "Sensor_idTipoSensor_fkey" FOREIGN KEY ("idTipoSensor") REFERENCES "TipoSensor" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -48,10 +48,10 @@ CREATE TABLE "Sensor" (
 -- CreateTable
 CREATE TABLE "Vaso" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "idUser" INTEGER NOT NULL,
+    "idUser" INTEGER,
     "dataAquisicao" DATETIME NOT NULL,
     "dataAtualizacao" DATETIME NOT NULL,
-    CONSTRAINT "Vaso_idUser_fkey" FOREIGN KEY ("idUser") REFERENCES "Usuario" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "Vaso_idUser_fkey" FOREIGN KEY ("idUser") REFERENCES "Usuario" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -68,7 +68,7 @@ CREATE TABLE "Plantio" (
 -- CreateTable
 CREATE TABLE "Placa" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "numeroSerie" BIGINT NOT NULL,
+    "numeroSerie" INTEGER NOT NULL,
     "modelo" TEXT NOT NULL,
     "dataAquisicao" DATETIME NOT NULL
 );
@@ -108,3 +108,6 @@ CREATE TABLE "Leituras" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Placa_numeroSerie_key" ON "Placa"("numeroSerie");

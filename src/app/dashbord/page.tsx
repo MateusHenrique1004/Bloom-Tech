@@ -1,3 +1,5 @@
+"use server";
+
 import UseAnimationFrame from "@/components/Charts/object";
 import Fc from "../../../public/sensors/fc-28.png";
 import Bomba from "../../../public/sensors/bombAgua.png";
@@ -14,14 +16,67 @@ import { faLeaf, faUserEdit } from "@fortawesome/free-solid-svg-icons";
 import { ChartArea } from "@/components/Charts/area";
 import { ChartBar } from "@/components/Charts/bar";
 import { ChartLine } from "@/components/Charts/line";
+import CarouselPlants from "@/components/Carroussel/plant";
+import { PrismaClient } from "@/generated/prisma";
+import { ModalRegisterVase } from "@/components/Modal/registerVase";
 
-export default async function Dashbord() {
+export default async function Dashboard() {
+  const prisma = new PrismaClient();
   const session = await getServerSession();
-  console.log("teste", session?.user);
 
   if (!session) {
     redirect("/");
   }
+
+  console.log("Email do usuário:", session.user?.email);
+  const user = await prisma.usuario.findUnique({
+    where: { email: session.user?.email },
+    select: { id: true },
+  });
+
+  if (!user) {
+    throw new Error("Usuário não encontrado.");
+  }
+
+  const hasVaso = await prisma.vaso.findFirst({
+    where: { idUser: user.id },
+    select: { id: true },
+  });
+
+  if (!hasVaso) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <h1 className="text-3xl font-semibold text-[#3c7225] mb-4">
+          Olá {session.user?.name}
+        </h1>
+        <p className="mb-6 text-center text-gray-700">
+          Você ainda não possui o nosso vaso.
+          <br />
+          Que tal adquirir um agora?
+        </p>
+        <Button className="bg-green-600 hover:bg-green-700 text-white">
+          Ir para a loja!
+        </Button>
+        <p className="mb-6 text-center text-gray-700 mt-6">
+          Caso você ja tenha comprado, clique aqui para cadastrar o seu vaso:
+        </p>
+        <ModalRegisterVase
+          trigger={
+            <Button className="bg-green-600 hover:bg-green-700 text-white">
+              Cadastrar vaso
+            </Button>
+          }
+        />
+        <p className="mb-6 text-center text-gray-700 mt-6">
+          Veja as opções disponíveis de plantas para você começar a plantar já!
+          {/* <br /> */}
+          {/* Que tal adquirir um agora? */}
+        </p>
+        <CarouselPlants />
+      </div>
+    );
+  }
+
   return (
     <>
       <h1 className="text-center text-[#3c7225] text-4xl">
@@ -43,10 +98,10 @@ export default async function Dashbord() {
         </Link>
       </div>
 
-      <div className=" flex flex-col m-20 ">
-        <div className=" flex flex-row justify-center items-center space-x-20">
+      <div className="flex flex-col m-20">
+        <div className="flex flex-row justify-center items-center space-x-20">
           <div className="flex flex-col items-center space-y-6 ">
-            <UseAnimationFrame />{" "}
+            <UseAnimationFrame />
             <h1 className="text-3xl text-[#5AAC38]">Equipamentos</h1>
             <div className="flex flex-nowrap justify-center gap-6">
               <ModalComponent

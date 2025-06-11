@@ -90,6 +90,29 @@ export default function Profile() {
     }
   }
 
+  // const cadastrarPlantaTeste = async () => {
+  //   try {
+  //     const res = await fetch("/api/userPlant", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ planta: 1 }), //idplant:1 ->>teste
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (!res.ok) {
+  //       alert(`Erro: ${data.error || "Falha ao cadastrar plantio"}`);
+  //     } else {
+  //       alert("Plantio cadastrado com sucesso!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Erro na requisição:", error);
+  //     alert("Erro de conexão ao cadastrar plantio");
+  //   }
+  // };
+
   return (
     <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply h-svh">
       <div className="flex flex-col">
@@ -196,6 +219,12 @@ export default function Profile() {
             </form>
           </Form>
         </div>
+      </div>
+      <div>
+        {/* <Button
+          className="bg-blue-600 hover:bg-blue-700 text-white mt-6"
+          onClick={cadastrarPlantaTeste}
+        ></Button> */}
       </div>
     </main>
   );

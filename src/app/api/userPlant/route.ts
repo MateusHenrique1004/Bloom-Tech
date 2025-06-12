@@ -38,7 +38,13 @@ export async function GET() {
 }
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  const { planta } = await req.json();
+  const formData = await req.formData();
+  const plantas = formData.get("idPlanta");
+  const jsonData = {
+    idPlanta: Number(plantas),
+  };
+  const planta = jsonData.idPlanta;
+
   const prisma = new PrismaClient();
 
   try {
@@ -51,7 +57,10 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "Usuário não encontrado" }, { status: 408 });
+      return NextResponse.json(
+        { error: "Usuário não encontrado" },
+        { status: 408 }
+      );
     }
 
     const vasoUser = await prisma.vaso.findFirst({
@@ -60,12 +69,15 @@ export async function POST(req: NextRequest) {
     });
 
     if (!vasoUser) {
-      return NextResponse.json({ error: "Usuário não tem vaso conectado" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Usuário não tem vaso conectado" },
+        { status: 404 }
+      );
     }
 
     const plantio = await prisma.plantio.create({
       data: {
-        idPlanta: Number(planta),
+        idPlanta: planta,
         idVaso: vasoUser.id,
         dataInicio: new Date(),
       },

@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { nome, email, senha, telefone } = await request.json();
+  const { nome, email, telefone } = await request.json();
   const user = await prisma.usuario.findUnique({ where: { email } });
 
   if (!user) {
@@ -43,11 +43,10 @@ export async function PUT(request: Request) {
       { status: 400 }
     );
   }
-  const senhaCripto = await bcrypt.hash(senha, 10);
 
   await prisma.usuario.update({
     where: { email },
-    data: { nome, email, telefone, senha: senhaCripto },
+    data: { nome, email, telefone },
   });
   return NextResponse.json(
     { message: "Usuário Atualizado com Sucesso" },

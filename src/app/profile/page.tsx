@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const formSchema = z
   .object({
@@ -23,16 +24,11 @@ const formSchema = z
     email: z.string().email("Email inválido").optional(),
     phone: z.string().optional(),
     password: z.string().min(6, "Mínimo 6 caracteres").optional(),
-    confirmPassword: z.string().optional(),
   })
   .refine(
     (data) => !!data.name || !!data.email || !!data.phone || !!data.password,
     { message: "Preencha pelo menos um campo" }
-  )
-  .refine((data) => !data.password || data.password === data.confirmPassword, {
-    message: "As senhas não coincidem",
-    path: ["confirmPassword"],
-  });
+  );
 
 export default function Profile() {
   const router = useRouter();
@@ -44,8 +40,6 @@ export default function Profile() {
       name: "",
       email: "",
       phone: "",
-      password: "",
-      confirmPassword: "",
     },
   });
 
@@ -58,8 +52,6 @@ export default function Profile() {
           name: user.nome || "",
           email: user.email || "",
           phone: user.telefone || "",
-          password: user.senha || "",
-          confirmPassword: user.senha || "",
         });
       }
 
@@ -92,7 +84,6 @@ export default function Profile() {
       body: JSON.stringify({
         nome: values.name,
         email: values.email,
-        senha: values.password,
         telefone: values.phone,
       }),
     });
@@ -165,40 +156,15 @@ export default function Profile() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nova senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Nova senha..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Confirme a senha..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+              <div className="w-full text-left text-sm">
+                <Link
+                  href={"/reset"}
+                  className="text-sm text-blue-600 hover:underline focus:outline-none"
+                >
+                  Redefinir Senha
+                </Link>
+              </div>
 
               <Button
                 className="w-full bg-[#3c7225] hover:bg-[#5AAC38]"

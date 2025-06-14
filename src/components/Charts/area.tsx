@@ -23,22 +23,18 @@ import {
 export const description = "An area chart with a legend";
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: "Maio", ideal: 25, medida: 27 },
+  { month: "Junho", ideal: 25, medida: 25 },
 ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
+  ideal: {
+    label: "Ideal",
+    color: "var(--chart-1)", // Cor da linha Ideal
   },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
+  medida: {
+    label: "Medida",
+    color: "var(--chart-2)", // Cor da linha Medida
   },
 } satisfies ChartConfig;
 
@@ -47,9 +43,7 @@ export function ChartArea() {
     <Card>
       <CardHeader>
         <CardTitle>Temperatura</CardTitle>
-        <CardDescription>
-          Maio - Junho 2025
-        </CardDescription>
+        <CardDescription>Maio - Junho 2025</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -74,19 +68,19 @@ export function ChartArea() {
               content={<ChartTooltipContent indicator="line" />}
             />
             <Area
-              dataKey="mobile"
+              dataKey="medida"
               type="natural"
-              fill="var(--color-mobile)"
+              fill="#FF5733" // Cor personalizada para "Medida"
               fillOpacity={0.4}
-              stroke="var(--color-mobile)"
+              stroke="#FF5733" // Cor personalizada para "Medida"
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="ideal"
               type="natural"
-              fill="var(--color-desktop)"
+              fill="#3498db" // Cor personalizada para "Ideal"
               fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              stroke="#3498db" // Cor personalizada para "Ideal"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />
@@ -97,10 +91,11 @@ export function ChartArea() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 leading-none font-medium">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Temperatura Mensal da sua Hortaliça
+              <TrendingUp className="h-4 w-4" />
             </div>
             <div className="text-muted-foreground flex items-center gap-2 leading-none">
-              January - June 2024
+              Maio - Junho 2025
             </div>
           </div>
         </div>

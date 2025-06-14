@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { ModalRegisterVase } from "@/components/Modal/registerVase";
+import { ModalRegisterVase } from "@/components/Modal/registerPlant";
 
 export default function ResetPage() {
   const [isModalOpen, setIsModalOpen] = useState(true);

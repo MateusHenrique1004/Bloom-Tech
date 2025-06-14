@@ -17,7 +17,7 @@ export default function Main() {
         </p>
         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
           <button className="bg-[#5AAC38] hover:bg-[#3c7225] text-white font-bold py-2 px-4 rounded">
-            Scanear
+            Adquirir
           </button>
           <span className="text-sm text-gray-600">
             +5.000 pessoas

@@ -1,8 +1,9 @@
-import Image, { StaticImageData } from "next/image";
-import { Button } from "@/components/ui/button";
+"use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -10,82 +11,134 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-import { PrismaClient } from "@/generated/prisma";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { resetSchema } from "@/schemas/resetSchema";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-import planta1 from "../../../public/plants/1.jpg";
-import planta2 from "../../../public/plants/2.jpg";
-import planta3 from "../../../public/plants/3.jpg";
-import planta4 from "../../../public/plants/4.jpg";
-import plantaDefault from "../../../public/plants/default.jpg";
-
-const plantImages: Record<number, StaticImageData> = {
-  1: planta1,
-  2: planta2,
-  3: planta3,
-  4: planta4,
-  5: plantaDefault,
-};
-
-const prisma = new PrismaClient();
-const plant = await prisma.planta.findMany();
-interface ModalPlantsProps {
-  userId: number;
+interface ModalResetProps {
+  trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onSuccess?: () => void;
 }
-export function ModalPlants({ userId }: ModalPlantsProps) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Escolher Planta</Button>
-      </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[800px]">
+export function ModalRegisterVase({
+  trigger,
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+  onSuccess,
+}: ModalResetProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const router = useRouter();
+
+  const isControlled =
+    controlledOpen !== undefined && setControlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const onOpenChange = isControlled ? setControlledOpen : setInternalOpen;
+
+  const form = useForm<RegisterVaseValues>({
+    resolver: zodResolver(resetSchema),
+    defaultValues: {
+      numeroSerie: "",
+    },
+  });
+
+  async function onSubmitReset(data: RegisterVaseValues) {
+    try {
+      const checkRes = await fetch(
+        `/api/placas?numeroSerie=${data.numeroSerie}`
+      );
+      if (!checkRes.ok) {
+        const err = await checkRes.json();
+        throw new Error(err.error || "Número de série não encontrado no banco");
+      }
+
+      const res = await fetch("/api/vasos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numeroSerie: data.numeroSerie }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Erro ao cadastrar vaso");
+      }
+
+      onOpenChange(false);
+      form.reset();
+      if (onSuccess) onSuccess();
+
+      router.push(`/editPlanta?serial=${data.numeroSerie}`);
+    } catch (err) {
+      alert(err || "Erro desconhecido");
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {!isControlled && trigger && (
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      )}
+
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>🌿 Escolha sua Planta</DialogTitle>
+          <DialogTitle>Adicionar Vaso</DialogTitle>
           <DialogDescription>
-            Clique na planta que deseja monitorar.
+            Digite o número de série da sua placa
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-          {plant.map((plants) => (
-            <form
-              key={plants.id}
-              method="POST"
-              action="/api/userPlant"
-              className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col items-center"
-            >
-              <input type="hidden" name="idPlanta" value={plants.id} />
-              <input type="hidden" name="userId" value={userId} />
-
-              <div className="relative w-full h-[120px]">
-                <Image
-                  src={plantImages[plants.id] || plantaDefault}
-                  alt={plants.nomeCientifico}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-2 w-full text-center">
-                <h3 className="text-sm font-semibold text-gray-800 mb-1">
-                  {plants.nomePopular}
-                </h3>
-                <Button
-                  type="submit"
-                  className="w-full text-white bg-green-600 hover:bg-green-700"
-                >
-                  Selecionar
-                </Button>
-              </div>
-            </form>
-          ))}
-        </div>
-
-        <DialogFooter className="mt-4">
-          <DialogClose asChild>
-            <Button variant="outline">Cancelar</Button>
-          </DialogClose>
-        </DialogFooter>
+        <Form {...form}>
+          <form
+            id="registerVase-form"
+            onSubmit={form.handleSubmit(onSubmitReset)}
+            className="space-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="numeroSerie"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <FormLabel className="text-right col-span-1">
+                    Nº Série
+                  </FormLabel>
+                  <FormControl className="col-span-3">
+                    <Input
+                      type="number"
+                      placeholder="Número de série"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage className="col-span-4 text-right" />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" form="registerVase-form">
+                Confirmar
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

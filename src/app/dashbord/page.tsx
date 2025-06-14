@@ -1,6 +1,5 @@
 "use server";
 
-import UseAnimationFrame from "@/components/Charts/object";
 import Fc from "../../../public/sensors/fc-28.png";
 import Bomba from "../../../public/sensors/bombAgua.png";
 import Esp from "../../../public/sensors/esp-32.png";
@@ -56,36 +55,35 @@ export default async function Dashboard() {
   if (!vaso) {
     //  User ainda não tem vaso
     return (
-<div className="flex flex-col items-center justify-center min-h-screen p-4 relative">
-  <h1 className="text-3xl font-semibold text-[#3c7225] mb-4">
-    Olá {session.user?.name}
-  </h1>
-  <p className="mb-6 text-center text-gray-700">
-    Você ainda não possui o nosso vaso.
-    <br />
-    Que tal adquirir um agora?
-  </p>
-  <Button className="bg-green-600 hover:bg-green-700 text-white">
-    Ir para a loja!
-  </Button>
-  <p className="mb-6 text-center text-gray-700 mt-6">
-    Caso você já tenha comprado, clique aqui para cadastrar o seu vaso:
-  </p>
-  <ModalRegisterVase
-    trigger={
-      <Button className="bg-green-600 hover:bg-green-700 text-white">
-        Cadastrar vaso
-      </Button>
-    }
-  />
-  <CarouselPlants />
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 relative">
+        <h1 className="text-3xl font-semibold text-[#3c7225] mb-4">
+          Olá {session.user?.name}
+        </h1>
+        <p className="mb-6 text-center text-gray-700">
+          Você ainda não possui o nosso vaso.
+          <br />
+          Que tal adquirir um agora?
+        </p>
+        <Button className="bg-green-600 hover:bg-green-700 text-white">
+          Ir para a loja!
+        </Button>
+        <p className="mb-6 text-center text-gray-700 mt-6">
+          Caso você já tenha comprado, clique aqui para cadastrar o seu vaso:
+        </p>
+        <ModalRegisterVase
+          trigger={
+            <Button className="bg-green-600 hover:bg-green-700 text-white">
+              Cadastrar vaso
+            </Button>
+          }
+        />
+        <CarouselPlants />
 
-  {/* O botão Settings ficará posicionado lateralmente */}
-  <div className="absolute top-4 right-4">
-    <SettingsDrop />
-  </div>
-</div>
-    )
+        <div className="absolute top-4 right-4">
+          <SettingsDrop />
+        </div>
+      </div>
+    );
   }
   //user tem vaso mas nao há planta
   if (vaso.plantios.length === 0) {

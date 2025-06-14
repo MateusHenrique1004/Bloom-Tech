@@ -1,7 +1,6 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const formSchema = z
   .object({
@@ -37,8 +36,7 @@ const formSchema = z
 
 export default function Profile() {
   const router = useRouter();
-  // const { data: session } = useSession();
-  // console.log(session);
+  const [plantaAtual, setPlantaAtual] = useState<any>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,11 +58,30 @@ export default function Profile() {
           name: user.nome || "",
           email: user.email || "",
           phone: user.telefone || "",
-          password: "",
-          confirmPassword: "",
+          password: user.senha || "",
+          confirmPassword: user.senha || "",
         });
       }
+
+      const plantaRes = await fetch("/api/userPlant");
+
+      if (plantaRes.ok) {
+        const data = await plantaRes.json();
+        const todosPlantios =
+          data.vasos?.flatMap((vaso) => vaso.plantios) || [];
+
+        console.log("PLANTIOS DO USUÁRIO:", todosPlantios);
+
+        const ativo = todosPlantios.find(
+          (plantio) => !plantio.dataFim || plantio.dataFim === null
+        );
+
+        console.log("Plantio ativo encontrado:", ativo);
+
+        setPlantaAtual(ativo?.planta);
+      }
     }
+
     fetchData();
   }, []);
 
@@ -79,6 +96,7 @@ export default function Profile() {
         telefone: values.phone,
       }),
     });
+
     const data = await res.json();
 
     if (res.ok) {
@@ -90,35 +108,11 @@ export default function Profile() {
     }
   }
 
-  // const cadastrarPlantaTeste = async () => {
-  //   try {
-  //     const res = await fetch("/api/userPlant", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ planta: 1 }), //idplant:1 ->>teste
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (!res.ok) {
-  //       alert(`Erro: ${data.error || "Falha ao cadastrar plantio"}`);
-  //     } else {
-  //       alert("Plantio cadastrado com sucesso!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro na requisição:", error);
-  //     alert("Erro de conexão ao cadastrar plantio");
-  //   }
-  // };
-
   return (
-    <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply h-svh">
-      <div className="flex flex-col">
-        <div className="w-[405px] h-auto mt-[100px] ml-[175px] justify-center items-center">
+    <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply h-svh p-10">
+      <div className="flex justify-between w-full gap-10">
+        <div className="w-[420px] bg-white/10 p-6 rounded-xl">
           <h1 className="text-4xl font-bold text-white">Editar Perfil</h1>
-
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -137,7 +131,6 @@ export default function Profile() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="email"
@@ -155,7 +148,6 @@ export default function Profile() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="phone"
@@ -173,7 +165,6 @@ export default function Profile() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="password"
@@ -191,7 +182,6 @@ export default function Profile() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -219,12 +209,39 @@ export default function Profile() {
             </form>
           </Form>
         </div>
-      </div>
-      <div>
-        {/* <Button
-          className="bg-blue-600 hover:bg-blue-700 text-white mt-6"
-          onClick={cadastrarPlantaTeste}
-        ></Button> */}
+
+        <div className="flex-1 bg-white/10 text-white p-6 rounded-xl h-fit">
+          <h2 className="text-2xl font-bold mb-4">Sua planta atual</h2>
+
+          {plantaAtual ? (
+            <div className="space-y-2">
+              <p>
+                <span className="font-semibold">Nome popular:</span>{" "}
+                {plantaAtual.nomePopular}
+              </p>
+              <p>
+                <span className="font-semibold">Nome científico:</span>{" "}
+                {plantaAtual.nomeCientifico}
+              </p>
+              <Button
+                onClick={() => router.push("/plantas")}
+                className="mt-4 bg-blue-600 hover:bg-blue-700"
+              >
+                Trocar planta
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <p>Você ainda não escolheu uma planta.</p>
+              <Button
+                onClick={() => router.push("/plantas")}
+                className="mt-4 bg-blue-600 hover:bg-blue-700"
+              >
+                Escolher planta
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

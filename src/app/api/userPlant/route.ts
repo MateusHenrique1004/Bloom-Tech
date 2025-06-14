@@ -11,30 +11,35 @@ export async function GET() {
     return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
   }
 
-  const userWithPlantas = await prisma.usuario.findUnique({
-    where: { email: session.user.email },
+  const user = await prisma.usuario.findUnique({
+    where: { email: session.user?.email },
+    select: { id: true },
+  });
+
+  const userWithVaso = await prisma.usuario.findUnique({
+    where: { id: user?.id },
     select: {
       vasos: {
         select: {
-          id: true,
           plantios: {
+            where: { dataFim: null },
             select: {
               planta: {
                 select: {
+                  id: true,
                   nomePopular: true,
                   nomeCientifico: true,
                 },
               },
-              dataInicio: true,
-              dataFim: true,
             },
           },
         },
       },
     },
   });
+  // console.log(userWithVaso);
 
-  return NextResponse.json(userWithPlantas);
+  return NextResponse.json(userWithVaso);
 }
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);

@@ -17,6 +17,22 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+
+import planta1 from "../../../public/plants/1.jpg";
+import planta2 from "../../../public/plants/2.jpg";
+import planta3 from "../../../public/plants/3.jpg";
+import planta4 from "../../../public/plants/4.jpg";
+import plantaDefault from "../../../public/plants/default.jpg";
+import { StaticImageData } from "next/image";
+
+const plantImages: Record<number, StaticImageData> = {
+  1: planta1,
+  2: planta2,
+  3: planta3,
+  4: planta4,
+  5: plantaDefault,
+};
 
 const formSchema = z
   .object({
@@ -100,14 +116,14 @@ export default function Profile() {
   }
 
   return (
-    <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply h-svh p-10">
-      <div className="flex justify-between w-full gap-10">
-        <div className="w-[420px] bg-white/10 p-6 rounded-xl">
-          <h1 className="text-4xl font-bold text-white">Editar Perfil</h1>
+    <main className="bg-center bg-no-repeat bg-[url('/fundo3.jpg')] bg-gray-600 bg-blend-multiply min-h-screen p-10">
+      <div className="flex flex-row gap-16 justify-center">
+        <div className="w-[420px] bg-white p-6 rounded-xl shadow-md">
+          <h1 className="text-4xl font-bold text-black">Editar Perfil</h1>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="mt-10 space-y-5 text-white"
+              className="mt-10 space-y-5 text-black"
             >
               <FormField
                 control={form.control}
@@ -116,7 +132,11 @@ export default function Profile() {
                   <FormItem>
                     <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input placeholder="Digite seu nome" {...field} />
+                      <Input
+                        placeholder="Digite seu nome"
+                        {...field}
+                        className="border-1 border-black"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -132,6 +152,7 @@ export default function Profile() {
                       <Input
                         type="email"
                         placeholder="exemplo@email.com"
+                        className="border-1 border-black"
                         {...field}
                       />
                     </FormControl>
@@ -149,6 +170,7 @@ export default function Profile() {
                       <Input
                         type="tel"
                         placeholder="(12) 99185-5231"
+                        className="border-1 border-black"
                         {...field}
                       />
                     </FormControl>
@@ -175,37 +197,51 @@ export default function Profile() {
             </form>
           </Form>
         </div>
-
-        <div className="flex-1 bg-white/10 text-white p-6 rounded-xl h-fit">
-          <h2 className="text-2xl font-bold mb-4">Sua planta atual</h2>
+        <div
+          className={`w-[380px] bg-white p-6 rounded-xl shadow-md ${
+            plantaAtual
+              ? "flex flex-col h-auto"
+              : "flex flex-col justify-center items-center h-fit text-center"
+          }`}
+        >
+          <h2 className="text-2xl font-bold text-black mb-4">
+            {plantaAtual ? "Sua planta atual" : "Nenhuma planta selecionada"}
+          </h2>
 
           {plantaAtual ? (
-            <div className="space-y-2">
-              <p>
-                <span className="font-semibold">Nome popular:</span>{" "}
-                {plantaAtual.nomePopular}
-              </p>
-              <p>
-                <span className="font-semibold">Nome científico:</span>{" "}
-                {plantaAtual.nomeCientifico}
-              </p>
+            <div className="flex flex-col items-center space-y-4">
+              <div className="relative w-full h-40 rounded-md overflow-hidden">
+                <Image
+                  src={plantImages[plantaAtual.id] || plantaDefault}
+                  alt={plantaAtual.nomeCientifico}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="text-black text-sm space-y-2 w-full ">
+                <p>
+                  <span className="font-semibold">Nome popular:</span>{" "}
+                  {plantaAtual.nomePopular}
+                </p>
+                <p>
+                  <span className="font-semibold">Nome científico:</span>{" "}
+                  {plantaAtual.nomeCientifico}
+                </p>
+              </div>
               <Button
                 onClick={() => router.push("/plantas")}
-                className="mt-4 bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-[#3c7225] hover:bg-[#5AAC38] mt-15"
               >
                 Trocar planta
               </Button>
             </div>
           ) : (
-            <div>
-              <p>Você ainda não escolheu uma planta.</p>
-              <Button
-                onClick={() => router.push("/plantas")}
-                className="mt-4 bg-blue-600 hover:bg-blue-700"
-              >
-                Escolher planta
-              </Button>
-            </div>
+            <Button
+              onClick={() => router.push("/plantas")}
+              className="mt-2 bg-[#3c7225] hover:bg-[#5AAC38]"
+            >
+              Escolher planta
+            </Button>
           )}
         </div>
       </div>

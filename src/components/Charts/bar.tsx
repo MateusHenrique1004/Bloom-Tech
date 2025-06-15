@@ -1,6 +1,6 @@
+// ChartBar.tsx
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
@@ -20,41 +20,46 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export const description = "A stacked bar chart with a legend";
-
-const chartData = [
-  { month: "Maio", ideal: 650, medida: 620 },
-  { month: "Junho", ideal: 650, medida: 600 },
+const defaultData = [
+  { month: "Maio", ideal: 600, medida: 670 },
+  { month: "Junho", ideal: 600, medida: 600 },
 ];
 
 const chartConfig = {
   ideal: {
     label: "Ideal",
-    color: "var(--chart-1)", // Cor da linha Ideal
+    color: "var(--chart-1)",
   },
   medida: {
     label: "Medida",
-    color: "var(--chart-2)", // Cor da linha Medida
+    color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
 
-export function ChartBar() {
+interface ChartBarProps {
+  data?: {
+    month: string;
+    ideal: number;
+    medida: number;
+  }[];
+}
+
+export function ChartBar({ data }: ChartBarProps) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Umidade do Solo</CardTitle>
-        <CardDescription>Maio - Junho 2025</CardDescription>
+        <CardDescription>Leitura do sensor FC-28</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart data={data?.length ? data : defaultData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
               tickLine={false}
-              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickMargin={10}
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />
@@ -73,11 +78,10 @@ export function ChartBar() {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          Como está a umidade do solo nos meses?
-        </div>
-        <div className="text-muted-foreground leading-none"></div>
+      <CardFooter>
+        <span className="text-sm text-muted-foreground">
+          FC-28 • Umidade do solo (sensor analógico)
+        </span>
       </CardFooter>
     </Card>
   );

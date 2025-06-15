@@ -52,6 +52,74 @@ export default async function Dashboard() {
     },
   });
 
+  const leituras = await prisma.leituras.findMany({
+    where: {
+      sensorVaso: {
+        vaso: {
+          idUser: user.id,
+        },
+        sensor: {
+          idTipoSensor: 2,
+        },
+      },
+    },
+    orderBy: {
+      datetime: "asc",
+    },
+    select: {
+      datetime: true,
+      umidade: true,
+      temperatura: true,
+    },
+  });
+
+  const umidadeDHT11Data = leituras.map((leitura) => ({
+    month: leitura.datetime.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+    }),
+    umidade: leitura.umidade ?? 0,
+    ideal: 99,
+  }));
+
+  const temperaturaDHT11Data = leituras.map((leitura) => ({
+    month: leitura.datetime.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+    }),
+    medida: leitura.temperatura ?? 0,
+    ideal: 25,
+  }));
+
+  const leiturasSolo = await prisma.leituras.findMany({
+    where: {
+      sensorVaso: {
+        vaso: {
+          idUser: user.id,
+        },
+        sensor: {
+          idTipoSensor: 1,
+        },
+      },
+    },
+    orderBy: {
+      datetime: "asc",
+    },
+    select: {
+      datetime: true,
+      umidade: true,
+    },
+  });
+
+  const umidadeSoloData = leiturasSolo.map((leitura) => ({
+    month: leitura.datetime.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+    }),
+    medida: leitura.umidade ?? 0,
+    ideal: 650, // Valor ideal para o FC-28
+  }));
+
   if (!vaso) {
     //  User ainda não tem vaso
     return (
@@ -151,9 +219,10 @@ export default async function Dashboard() {
               Gráficos do seu Plantio
             </h1>
             <div className="flex flex-row space-x-7 justify-between">
-              <ChartArea />
-              <ChartLine />
-              <ChartBar />
+              <ChartArea data={temperaturaDHT11Data} />
+              <ChartLine data={umidadeDHT11Data} />
+
+              <ChartBar data={umidadeSoloData} />
             </div>
           </div>
         </div>

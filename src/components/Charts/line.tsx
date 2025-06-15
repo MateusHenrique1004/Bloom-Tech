@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
@@ -18,40 +17,38 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export const description = "A multiple line chart";
-
-const chartData = [
-  { month: "Maio", desktop: 209, mobile: 130 },
-  { month: "Junho", desktop: 214, mobile: 140 },
-];
-
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  umidade: {
+    label: "Umidade",
     color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
 
-export function ChartLine() {
+interface ChartLineProps {
+  data?: {
+    month: string;
+    umidade: number; // leitura real do DHT11
+    ideal: number; // valor ideal para comparação
+  }[];
+}
+
+export function ChartLine({ data }: ChartLineProps) {
+  const defaultData = [
+    { month: "Maio", umidade: 21, ideal: 18 },
+    { month: "Junho", umidade: 17, ideal: 18 },
+  ];
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Umidade do Ar</CardTitle>
-        <CardDescription>Maio - Junho 2025</CardDescription>
+        <CardDescription>Leituras do sensor DHT11</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <LineChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+            data={data?.length ? data : defaultData}
+            margin={{ left: 12, right: 12 }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
@@ -59,20 +56,24 @@ export function ChartLine() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+
+            {/* Linha de umidade real */}
             <Line
-              dataKey="desktop"
+              dataKey="umidade"
               type="monotone"
-              stroke="var(--color-desktop)"
+              stroke="var(--color-umidade)"
               strokeWidth={2}
               dot={false}
             />
+
+            {/* Linha de umidade ideal */}
             <Line
-              dataKey="mobile"
+              dataKey="ideal"
               type="monotone"
-              stroke="var(--color-mobile)"
+              stroke="#999"
+              strokeDasharray="4 4"
               strokeWidth={2}
               dot={false}
             />
@@ -80,14 +81,10 @@ export function ChartLine() {
         </ChartContainer>
       </CardContent>
       <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 leading-none font-medium">
-              Umidade do Ar reverente aos últimos meses{" "}
-              <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="text-muted-foreground flex items-center gap-2 leading-none"></div>
-          </div>
+        <div className="text-sm">
+          <span className="text-muted-foreground">
+            DHT11 • Umidade relativa do ar
+          </span>
         </div>
       </CardFooter>
     </Card>

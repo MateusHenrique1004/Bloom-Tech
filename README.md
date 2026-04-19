@@ -36,6 +36,7 @@ Bloom-Tech é uma aplicação full-stack que conecta vasos instrumentados com se
 - **Node.js** >= 18.x
 - **npm** >= 9.x
 - Conta **Gmail** com [App Password](https://myaccount.google.com/apppasswords) habilitada (necessário para recuperação de senha)
+- **ESP-32** ou **Arduino** com sensores DHT11 (temperatura/umidade) e/ou FC-28 (umidade do solo) — necessário para enviar leituras reais ao dashboard
 
 ---
 

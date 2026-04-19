@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   const { email } = await req.json();
 
   const token = generateResetToken(email);
-  const url = `http://localhost:3000/reset-password/${token}`;
+  const url = `${process.env.NEXTAUTH_URL}/reset-password/${token}`;
   const emailHtml = `
       <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
         <h2 style="color: #0056b3;">Recuperação de Senha - BloomTech</h2>
